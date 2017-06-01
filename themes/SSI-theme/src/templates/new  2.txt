@@ -1,0 +1,45 @@
+<div id="quickLinks">
+<div class="quickLinksRow">
+<div class="linksIcon"><img src="/documents/20147/38180/ic_helpdesk.svg/6988fa65-b31d-fe1c-d28f-c76bd3dc7ffa" /><br />
+<a href="#">Contact Forms</a></div>
+
+<div class="linksIcon"><img src="/documents/20147/38180/ic_cal.svg/8bb06242-a5f3-eb2c-76d4-cd4d006b8261" /><br />
+<a href="#">Calendar</a></div>
+
+<div class="linksIcon"><img src="/documents/20147/38180/ic_opening.svg/87a11d44-d8c7-cf64-6925-07dd7c91a8c4" /><br />
+<a href="#">Openings</a></div>
+</div>
+
+<div class="quickLinksRow">
+<div class="linksIcon"><img src="/documents/20147/38180/ic_forms.svg/4713bf2e-319b-f18d-6a39-b2cf01942559" /><br />
+<a href="#">Forms</a></div>
+
+<div class="linksIcon"><img src="/documents/20147/38180/ic_performance.svg/1dc3125a-80ec-2778-3e9a-d05c9084d190" /><br />
+<a href="#">Performance</a></div>
+
+<div class="linksIcon"><img src="/documents/20147/38180/ic_directory.svg/3da36f78-1d92-1d92-7446-e3d6a2f1700b" /><br />
+<a href="#">Directory</a></div>
+</div>
+
+<div class="quickLinksRow">
+<div class="linksIcon"><img src="/documents/20147/38180/ic_time.svg/63c6345f-8996-4cc1-391b-e210819656d9" /><br />
+<a href="#">Timesheet</a></div>
+
+<div class="linksIcon"><img src="/documents/20147/38180/ic_faq.svg/6f919825-9041-4166-2ed8-2bb5999cc77d" /><br />
+<a href="#">Bookmarks</a></div>
+
+<div class="linksIcon"><img src="/documents/20147/38180/ic_report.svg/29802299-f50e-95d2-a6ae-07c9040e86bf" /><br />
+<a href="#">Make a Report</a></div>
+</div>
+
+<div class="quickLinksRow">
+<div class="linksIcon"><img src="/documents/20160/0/ic_charts.svg/1cbf399e-831a-614f-3d8e-16291d54a44c" /><br />
+<a href="#">View Charts</a></div>
+
+<div class="linksIcon"><img src="/documents/20147/38180/ic_image_gallery.svg/55ceefef-3c85-f7a6-98d2-bcb8e07843cb" /><br />
+<a href="#">Slideshare</a></div>
+
+<div class="linksIcon"><img src="/documents/20147/38180/ic_handbook.svg/af606147-df39-26e8-45d5-355015bc102d" /><br />
+<a href="#">Handbook</a></div>
+</div>
+</div>
