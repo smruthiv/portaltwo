@@ -1,0 +1,103 @@
+<%@page import="com.liferay.portal.kernel.security.permission.PermissionChecker"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.liferay.portal.kernel.model.UserGroup"%>
+<%@page import="com.liferay.portal.kernel.security.auth.CompanyThreadLocal"%>
+<%@page import="com.liferay.portal.kernel.service.UserGroupLocalServiceUtil"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="com.liferay.portal.kernel.model.User"%>
+<%@page import="java.util.List"%>
+<%@page import="com.liferay.portal.kernel.service.UserLocalServiceUtil"%>
+<%@ include file="/init.jsp" %>
+
+<script type="text/javascript" src="/documents/20147/40002/jquery.dataTables.min.js/3097edbb-f7e2-58c7-939f-e6f07a214d11"></script>
+<link href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" rel="stylesheet" />
+<%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
+<%@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
+
+<portlet:defineObjects />
+<liferay-theme:defineObjects />
+<%
+
+
+Long companyId = CompanyThreadLocal.getCompanyId();
+String userGroupId = portletPreferences.getValue("userGroupId", "0");
+UserGroup userGroup = null;
+if(userGroupId!=null && !userGroupId.isEmpty() && !userGroupId.equals("0") ){
+	 userGroup = UserGroupLocalServiceUtil.getUserGroup(Long.valueOf(userGroupId));
+}
+List<User> users = new ArrayList<User>();
+if(userGroup!=null){
+	 users = UserLocalServiceUtil.getUserGroupUsers(userGroup.getUserGroupId());
+}
+
+String pattern="dd-MM-yyyy";
+SimpleDateFormat ft = new SimpleDateFormat();
+ft.applyPattern(pattern);
+
+%>
+
+    <portlet:renderURL var="advanceView" >
+				<portlet:param name="jspPage" value="/advanceView.jsp"/>
+				
+			</portlet:renderURL>
+
+<%if(userGroupId == null || (userGroupId !=null && userGroupId.equals("0"))){ %>
+<div class="alert alert-warning confmsg" role="alert">
+  <strong>Configuration:-</strong> Please select User Group from configuration to display users list.
+</div>
+<%}else{ %><a href="<%=advanceView.toString()%>" class="advanceSearch">Advanced Search</a>
+<table id="example" class="table table-striped table-bordered" >
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Designation</th>
+                <th>Contact</th>
+                
+            </tr>
+        </thead>
+
+        <tbody>
+           
+               
+
+  <%for(User user1:users){ %>
+  <%if(user1.isActive()){ %>
+    <tr>
+    <portlet:renderURL var="fullProfile" >
+				<portlet:param name="jspPage" value="/fullProfile.jsp"/>
+				<portlet:param name="editId" value="<%=String.valueOf(user1.getUserId())%>"/>
+			</portlet:renderURL>
+			
+	
+	 <td><a href="<%=fullProfile.toString()%>"><%=user1.getFirstName().concat(" ").concat(user1.getLastName())%></a></td>
+	 <td><a href="mailto:<%=user1.getEmailAddress()%>"><%=user1.getEmailAddress()%></a></td>
+	<td><%=user1.getJobTitle() %></td>
+	  
+<%if(user1.getPhones()!=null && user1.getPhones().size() > 0 && user1.getPhones().get(0) !=null){ %>
+<td><%= user1.getPhones().get(0).getNumber() %></td>
+<%}else{%>
+<td></td>
+<%}%>
+
+</tr>
+<%}}%>
+
+
+
+   </tbody>
+    </table>
+    <%}%>
+ 	<script>
+	$(document).ready(function() {
+
+    $('#example').dataTable( {
+    	 "order": [],
+        "aoColumnDefs": [
+                         
+            { 'bSortable': false, 'aTargets': [ 0 ] }
+         ]
+  });
+
+} );
+</script>
