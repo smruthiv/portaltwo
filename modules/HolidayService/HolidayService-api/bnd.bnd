@@ -1,9 +1,0 @@
-Bundle-Name: HolidayService-api
-Bundle-SymbolicName: com.ssi.holiday.service.api
-Bundle-Version: 1.0.0
-Export-Package:\
-	com.ssi.holiday.service.exception,\
-	com.ssi.holiday.service.model,\
-	com.ssi.holiday.service.service,\
-	com.ssi.holiday.service.service.persistence
--includeresource: META-INF/service.xml=../HolidayService-service/service.xml
