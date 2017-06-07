@@ -1,30 +1,44 @@
 <div aria-expanded="true" class="collapse navbar-collapse" id="navigationCollapse">
 <div id="rightMenu">
-<#if is_signed_in>
-			<div class="logout"><a href="${sign_out_url}" id="sign-out" rel="nofollow" title="Logout"></a></div>
-			</#if>
-<#if is_signed_in && permissionChecker.isOmniadmin()>
-<div class="settings"><a href="#" onclick="toggleDockbar();return false;" title="Settings"></a></div>
+
+
+
+
+
+			<div class="userAccount">
+			<ul class="userMenu">
+			<li><a href="#" onclick="toggleUserMenu();return false;">
+			<span class="user-avatar-image">
+					
+													<img class =" aspect-ratio-bg-cover user-icon" src ="${user_avatar_url}" alt="user avatar"/>
+												
+				</span>
+				<span class="user-full-name">
+					${user_name}
+				</span>
+								
+								</a>
+			<ul class="userDropdown">
+			<li><a href="/group/ssi/profile"><img src="${images_folder}/icons/drop_user_profile.svg" />My Profile</a><li>
+			<li><a href="/user/${user_screen_name}/~/51801/home"><img src="${images_folder}/icons/drop_my_doc.svg" />My Documents</a></li>
+			
+			
+			
+			
+			<#if is_signed_in && permissionChecker.isOmniadmin()>
+<li><a href="/group/ssi/user-docs"><img src="${images_folder}/icons/drop_user_doc.svg" /> Users Documents</a></li>
+<li><a href="#" onclick="toggleDockbar();return false;" title="Settings"><img src="${images_folder}/icons/drop_settings.svg" />Settings</a></li>
 </#if>
-			
-			<div class="userAccount" title="My Account">
-			
-		
-		
 
-								<div class="nav pull-right">
-									
-										<#if !is_signed_in>
-											<span class="icon-login icon-monospaced">
-												<svg class="lexicon-icon">
-													<use xlink:href="${images_folder}/lexicon/icons.svg#users"/>
-												</svg>
-											</span>
-										</#if>
-
-										<@liferay.user_personal_bar />
-									
-								</div>
+		
+			<#if is_signed_in>
+			<li><a href="${sign_out_url}" id="sign-out" rel="nofollow" title="Logout"><img src="${images_folder}/icons/drop_logout.svg" />Logout</a></li>
+			</#if>	
+			
+			</ul>
+			</li>
+			</ul>
+							
 			</div>
 	<#if main_search_class != "no-screen">
 		<nav id="search" role="navigation">
@@ -135,6 +149,10 @@ nav_item_chevron='<span><i class="icon-chevron-down"></i></span>'
 <script>
 function toggleDockbar(){
 $('.control-menu').toggle();
+}
+function toggleUserMenu(){
+$('.userDropdown').toggle();
+
 }
 </script>
 <script>

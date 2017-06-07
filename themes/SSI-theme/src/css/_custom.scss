@@ -44,12 +44,12 @@ margin-right:auto;
     box-shadow: 0 0 8px 0 #c58779;*/
 	margin:auto;
 
-	#content .portlet-layout {
+	
+}
+#content .portlet-layout {
 		margin-left: 0;
 		margin-right: 0;
 	}
-}
-
 .modify-pages .delete-footer_tab {
 	color: #F00;
 	height: 20px;
@@ -78,6 +78,53 @@ border:none !important;
 }
 
 /*****************Navigation Menu*********************************/
+@media screen and (max-width: 767px){
+	.userDropdown{
+	width:100% !important;
+	}
+	
+	
+}
+.userMenu{
+padding:0;
+margin:0;}
+
+.userMenu li{
+list-style:none;}
+
+.userDropdown{
+display:none;
+position:absolute;
+padding:0;
+width:15em;
+margin-top:10px;
+right:0;
+z-index: 15;
+    }
+    @media screen and (min-width: 768px){
+.userDropdown:before {
+    position: absolute;
+    top: -18px;
+    height: 0;
+    width: 0;
+    right: 24%;
+    border: 9px solid transparent;
+    border-bottom-color: #b14d35;
+    content: "";
+}
+    }
+.userDropdown li a {
+    padding: 14px 45px 8px 8px;
+    background: #b14d35;
+    display: block;
+    color: #fff;
+    border-bottom: 1px solid #a1422b;
+}
+.userDropdown img {
+    padding: 2px 7px 2px 2px;
+    width:24px;
+}
+
 
   .hasChildren ul { 
     display: none;
@@ -190,7 +237,7 @@ margin-right: 2px;
 box-shadow:none;
 }
 #search {
-    float: right;
+    /* float: right; */
 }
 #search .portlet-topper {
     display: none;
@@ -199,6 +246,9 @@ box-shadow:none;
     margin-top: 1.5em !important;
 	margin-left: 1em;
 }
+
+
+
 #banner .navbar-form .form-control {
     border-bottom-width: 0;
     margin-top: 2px;
@@ -548,7 +598,7 @@ padding:1em;}
     margin-right: 5px;
 }
 
-.social-icons a{
+.socialIcons a{
 padding:0 !important;}
 
 .btn-primary {
@@ -997,7 +1047,33 @@ height: 22em;
 	font-size:12px;
 }
 
+/***************************************************************HR Quick Links************************/
+#HRquickLinks .linksIcon {
+   display: inline-table;
+    padding:0;
+    float: left;
+ text-align:left;
+    width:100%;
+    margin:-10px;
+}
+#HRquickLinks .subTitle {
+    font-size: 12px;
+}
 
+#HRquickLinks{
+
+height:auto;
+}
+#HRquickLinks .linksIcon a {
+    color: #983720;
+    font-size: 14px;
+}
+#HRquickLinks .linksIcon img {
+    width: 35px;
+    height: 35px;
+    float: left;
+    margin: 1.3em;
+}
 
 
 /*******************Hiding Dockbar by default**********************************/
@@ -1179,3 +1255,60 @@ background: url(../images/icons/bullet.png) no-repeat left top;
     padding: 0 10px 0px 33px;
     
 }
+
+
+/***********************************HR Forms Styling******************************************************/
+.ssiForms img {
+    height: 64px;
+    width: 64px;
+    margin: 0em 1em 0em 1em;
+}
+
+.ssiForms .link {
+    color: #983720;
+    font-size: 16px;
+    margin: 0;
+}
+
+.ssiForms .download a {
+    color: #7b7272;
+    font-size: 13px;
+   
+}
+.ssiForms{
+margin-top:1em;}
+
+
+
+
+
+
+/*******************************************************User Documents Styling***************************************************/
+#userDocs #example  .sticker-default {
+    background-color: #f5984c;
+    color: #869cad;
+}
+
+#userDocs .sticker-lg .lexicon-icon{
+color:#fff;
+}
+#userDocs .lfr-card-title-text a {
+    color: #6d2616;
+}
+#userDocs #example_wrapper input, select {
+    padding: 8px;
+    background: #f3f3f3;
+    height: 2.5em;
+    border: 1px solid #ffbd43;
+    border-radius: 3px;
+}
+#userDocs #example td {
+    height: 1em;
+    padding: 0;
+    border: none;
+    background: #f3f3f3 !important;
+}
+#userDocs #example th{
+display:none;}
+
+
