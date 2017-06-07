@@ -1,3 +1,9 @@
 {
-  "LiferayTheme": {}
+  "LiferayTheme": {
+    "deployPath": "dist",
+    "themeName": "SSI-theme",
+    "appServerPathTheme": "themes",
+    "deployed": true,
+    "appServerPath": "themes"
+  }
 }
