@@ -40,12 +40,14 @@ ft.applyPattern(pattern);
 				<portlet:param name="jspPage" value="/advanceView.jsp"/>
 				
 			</portlet:renderURL>
-
+<div  id="userDocs">
 <%if(userGroupId == null || (userGroupId !=null && userGroupId.equals("0"))){ %>
 <div class="alert alert-warning confmsg" role="alert">
   <strong>Configuration:-</strong> Please select User Group from configuration to display users list.
 </div>
-<%}else{ %><a href="<%=advanceView.toString()%>" class="advanceSearch">Advanced Search</a>
+<%}else{ %>
+
+<a href="<%=advanceView.toString()%>" class="advanceSearch">Advanced Search</a>
 <table id="example" class="table table-striped table-bordered" >
         <thead>
             <tr>
@@ -87,7 +89,9 @@ ft.applyPattern(pattern);
 
    </tbody>
     </table>
+    
     <%}%>
+    </div>
  	<script>
 	$(document).ready(function() {
 

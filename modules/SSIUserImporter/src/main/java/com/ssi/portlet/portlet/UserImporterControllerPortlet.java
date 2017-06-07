@@ -8,10 +8,12 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.PasswordPolicy;
+import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.PasswordPolicyLocalServiceUtil;
+import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -73,7 +75,7 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws IOException, PortletException {
-		logger.info("Render method called");
+		logger.info("UserImporterControllerPortlet Render method called");
 		super.render(renderRequest, renderResponse);
 	}
 	
@@ -101,23 +103,45 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 					int i = 0;
 					while(cellIterator.hasNext()) {
 						Cell cell = cellIterator.next();
-						if(i%3==0){
-							myUser.setFirstName(cell.getStringCellValue());
-						}
-						else if(i%3==1){
+						if(i%8==0){
 							myUser.setLastNamne(cell.getStringCellValue());
 						}
-						else{
+						else if(i%8==1){
+							myUser.setFirstName(cell.getStringCellValue());
+						}
+						else if(i%8==2){
+							myUser.setJobTitle(cell.getStringCellValue());
+						}
+						else if(i%8==3){
 							myUser.setEmail(cell.getStringCellValue());
+						}
+						else if(i%8==4){
+							if(cell.getStringCellValue()!=null&&!cell.getStringCellValue().trim().isEmpty()&&cell.getStringCellValue().trim().equalsIgnoreCase("Yes")){
+								myUser.setManager(true);
+							}
+						}
+						else if(i%8==5){
+							if(cell.getStringCellValue()!=null&&!cell.getStringCellValue().trim().isEmpty()&&cell.getStringCellValue().trim().equalsIgnoreCase("Yes")){
+								myUser.setGHSI(true);
+							}
+						}
+						else if(i%8==6){
+							if(cell.getStringCellValue()!=null&&!cell.getStringCellValue().trim().isEmpty()&&cell.getStringCellValue().trim().equalsIgnoreCase("Yes")){
+								myUser.setExecutive(true);
+							}
+						}
+						else if(i%8==7){
+							if(cell.getStringCellValue()!=null&&!cell.getStringCellValue().trim().isEmpty()&&cell.getStringCellValue().trim().equalsIgnoreCase("Yes")){
+								myUser.setHR(true);
+							}
 						}
 						i++;
 					}
-					if(myUser!=null && !myUser.getEmail().equals("Email")){
-						logger.info("Theme display"+themeDisplay);
+					if(myUser!=null && !myUser.getEmail().trim().equals("Work Email")){
+						logger.info("Email Setting :-"+myUser.getEmail());
 						myUser.setUserId(themeDisplay.getUserId());
-						char firstChar ;
-						firstChar = myUser.getFirstName().charAt(0);
-						myUser.setScreenName(firstChar+myUser.getLastNamne());
+						String screenname =  myUser.getEmail().trim().split("@")[0];
+						myUser.setScreenName(screenname);
 						myUser.setCompanyId(themeDisplay.getCompanyId());
 						Locale locale = themeDisplay.getLocale();
 						myUser.setLocale(locale);
@@ -130,11 +154,32 @@ public class UserImporterControllerPortlet extends MVCPortlet {
     		   	workbook.close();
     		   	file.close();
     		   	boolean isComplete = false;
+    		   	List<Role> roles = RoleLocalServiceUtil.getRoles(0, RoleLocalServiceUtil.getRolesCount());
     		   	
-    		   	isComplete  = createPortalUsers(users);
+    		   long managerRoleId = 0;
+    		   long ghsiRoleId = 0;
+    		   long executiveRoleId = 0;
+    		   long hrRoleId = 0;
+    		   
+    		   for(Role role : roles){
+    			   if(role.getName().equals("Manager")){
+    				   managerRoleId = role.getRoleId();
+    			   }
+    			   if(role.getName().equals("GHSI")){
+    				   ghsiRoleId = role.getRoleId();
+    			   }
+    			   if(role.getName().equals("Executive")){
+    				   executiveRoleId = role.getRoleId();
+    			   }
+    			   if(role.getName().equals("HR")){
+    				   hrRoleId = role.getRoleId();
+    			   }
+    		   }
+    		   
+    		   	isComplete  = createPortalUsers(users, managerRoleId, ghsiRoleId, executiveRoleId, hrRoleId);
     		   	
     		   	if(isComplete){
-    		   		sendEmail(users);
+    		   		//sendEmail(users);
     		   		isComplete =	createXlsFileForCreatedUsersDetails(users);
     		   	}
     		   	else{
@@ -152,7 +197,7 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 				logger.error("Error while creating user and reading files"+e);
 			} 
 	    	finally {
-	    		 List<PasswordPolicy> passwordPolicy = PasswordPolicyLocalServiceUtil.getPasswordPolicies(0, PasswordPolicyLocalServiceUtil.getPasswordPoliciesCount());
+	    		
 	    		
 	    	  	} 
 		}
@@ -178,14 +223,28 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 	       return user;
 	   }
 
-	  private boolean createPortalUsers(List<MyUser> myUsers){
+	  private boolean createPortalUsers(List<MyUser> myUsers,long managerRoleId,long ghsiRoleId,long executiveRoleId,long hrRoleId){
 		  try{
 			  User user1 = null;
 			  for (MyUser user : myUsers) {
 				user1 = UserLocalServiceUtil.addUser(user.getUserId(), user.getCompanyId(), false, user.getPassWord(),
 						user.getPassWord(), false, user.getScreenName(), user.getEmail(), 0L, "", user.getLocale(),
-						user.getFirstName(), "", user.getLastNamne(), 0, 0, false, 0, 1, 1970, "Job Title", null, null,
+						user.getFirstName(), "", user.getLastNamne(), 0, 0, false, 0, 1, 1970, user.getJobTitle(), null, null,
 						null, null, false, new ServiceContext());
+				
+				if(user.isManager()&&managerRoleId!=0){
+					RoleLocalServiceUtil.addUserRole(user1.getUserId(), managerRoleId);
+				}
+				if(user.isGHSI()&&ghsiRoleId!=0){
+					RoleLocalServiceUtil.addUserRole(user1.getUserId(), ghsiRoleId);
+				}
+				if(user.isExecutive()&&executiveRoleId!=0){
+					RoleLocalServiceUtil.addUserRole(user1.getUserId(), executiveRoleId);
+				}
+				if(user.isHR()&&hrRoleId!=0){
+					RoleLocalServiceUtil.addUserRole(user1.getUserId(), hrRoleId);
+				}
+				
 				logger.info(
 						"New User Created with userId :- " + user1.getUserId() + " password :- " + user.getPassWord());
 			  }
@@ -201,19 +260,25 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 		  	HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet("Created User");
 			Map<String, Object[]> data = new HashMap<String, Object[]>();
-			data.put(String.valueOf(1), new Object[] {"Email", "Password"});
+		//	data.put(String.valueOf(1), new Object[] {"Email", "Password"});
 			for(int i=0 ; i<users.size();i++){
 				data.put(String.valueOf(i+2), new Object[] {users.get(i).getEmail(),users.get(i).getPassWord()});
 			}
 		
 			Set<String> keyset = data.keySet();
 			int rownum = 0;
+			Row row = sheet.createRow(rownum++);
+			Cell cell = row.createCell(0);
+			cell.setCellValue((String)"Email");
+			cell = row.createCell(1);
+			cell.setCellValue((String)"Password");
+			
 			for (String key : keyset) {
-				Row row = sheet.createRow(rownum++);
+				row = sheet.createRow(rownum++);
 				Object [] objArr = data.get(key);
 				int cellnum = 0;
 				for (Object obj : objArr) {
-					Cell cell = row.createCell(cellnum++);
+					 cell = row.createCell(cellnum++);
 					if(obj instanceof Date) 
 						cell.setCellValue((Date)obj);
 					else if(obj instanceof Boolean)
@@ -254,7 +319,7 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 		 return true;
 	  }
 	 
-	 public void sendEmail(List<MyUser> users) {
+	/* public void sendEmail(List<MyUser> users) {
 		 
 		 for(MyUser myUser : users){
 		        try {
@@ -273,5 +338,5 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 					logger.error("Error While sending Email*******************"+e.getMessage());
 				} 
 		 }
-		}
+		}*/
 }

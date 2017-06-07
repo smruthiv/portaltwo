@@ -12,7 +12,43 @@ public class MyUser {
 	String email;
 	Locale locale;
 	String passWord;
+	String jobTitle;
+	boolean isManager=false;
+	boolean isGHSI=false;
+	boolean isExecutive=false;
+	boolean isHR=false;
+
 	
+	public String getJobTitle() {
+		return jobTitle;
+	}
+	public void setJobTitle(String jobTitle) {
+		this.jobTitle = jobTitle;
+	}
+	public boolean isManager() {
+		return isManager;
+	}
+	public void setManager(boolean isManager) {
+		this.isManager = isManager;
+	}
+	public boolean isGHSI() {
+		return isGHSI;
+	}
+	public void setGHSI(boolean isGHSI) {
+		this.isGHSI = isGHSI;
+	}
+	public boolean isExecutive() {
+		return isExecutive;
+	}
+	public void setExecutive(boolean isExecutive) {
+		this.isExecutive = isExecutive;
+	}
+	public boolean isHR() {
+		return isHR;
+	}
+	public void setHR(boolean isHR) {
+		this.isHR = isHR;
+	}
 	public Locale getLocale() {
 		return locale;
 	}

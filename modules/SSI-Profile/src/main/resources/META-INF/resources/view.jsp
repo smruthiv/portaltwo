@@ -1,3 +1,6 @@
+<%@page import="com.liferay.portal.kernel.service.AddressLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.model.Address"%>
+<%@page import="com.liferay.portal.kernel.service.UserLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.model.UserGroup"%>
 <%@page import="com.liferay.portal.kernel.service.CountryServiceUtil"%>
 <%@page import="java.util.List"%>
@@ -14,15 +17,28 @@ List<Country> countries = CountryServiceUtil.getCountries();
 List<UserGroup> userGroups = objUser.getUserGroups();
 boolean showMyDocs = false;
 %>
+
+<liferay-ui:error key="invalid-current-password" message="Invalid Current Password"/>
+<liferay-ui:error key="confirm-new-password" message="New password and confirm password should be same"/>
+<liferay-ui:error key="name-is-required" message="Current password required to reset new password."></liferay-ui:error>
+<liferay-ui:error key="street1-required" message="Please enter a valid street1."></liferay-ui:error>
+<liferay-ui:error key="city-required" message="Please enter a valid city."></liferay-ui:error>
+<liferay-ui:error key="street1-city-required" message="City required fields."></liferay-ui:error>
+<liferay-ui:success key="success" message="Profile saved successfully!"/>
+
 <liferay-portlet:actionURL var="actionUrl" />
 <aui:form action="<%=actionUrl%>" method="post" name="configurationFm"
 	class="form-horizontal" role="form" enctype="multipart/form-data">
+	<div id="myProfile">
 	<div class="container">
 		<div class="row">
 			<!-- left column -->
 			<div class="col-md-3">
 				<div class="text-center">
-					<img src="<%=objUser.getPortraitURL(themeDisplay)%>"
+				<%User myprouser = UserLocalServiceUtil.getUser(objUser.getUserId()); 
+				  String srcImg = myprouser.getPortraitURL(themeDisplay);	
+				%>
+					<img src="<%=srcImg%>"
 						class="avatar img-circle" alt="avatar">
 						<br>
 					<button class="btn btn-primary btn-lg" type="button" data-target="#lexSmallModal" data-toggle="modal" >Change Picture</button>
@@ -32,26 +48,7 @@ boolean showMyDocs = false;
 					
 				</div>
 				
-				<div class="text-center">
-				<%for(UserGroup userGroup : userGroups){if(userGroup.getName().equals("Personal_Docs")){
-					String url = "/user/".concat(objUser.getScreenName()).concat("/~/51801/home");
-				%>
-						
-			<div class="card card-horizontal taglib-horizontal-card ">
-	<div class="card-row card-row-padded selectable">
-		<div class="card-col-field">
-			<div class="sticker sticker-default sticker-lg sticker-static">
-			<span class="text-default">
-			<svg class="lexicon-icon lexicon-icon-folder" role="img" title="" viewBox="0 0 512 512">
-		 <path class="lexicon-icon-body" fill="none" d="M455.1,128H352c-9.5,0-31.9-45.7-38.6-59.5C298,36.4,280.4,0,245.1,0H55.9C25.1,0,0,26.9,0,59.8v395.3
-	C0,486.5,25.5,512,56.9,512h398.2c31.4,0,56.9-25.5,56.9-56.9V184.9C512,153.6,486.5,128,455.1,128L455.1,128z"></path>
-<path class="lexicon-icon-outline" d="M455.1,128H352c-9.5,0-31.9-45.7-38.6-59.5C298,36.4,280.4,0,245.1,0H55.9C25.1,0,0,26.9,0,59.8v395.3
-	C0,486.5,25.5,512,56.9,512h398.2c31.4,0,56.9-25.5,56.9-56.9V184.9C512,153.6,486.5,128,455.1,128L455.1,128z M64,67
-	c0,0,0.3-2.4,0.7-3h178.1c5.6,5.9,14.4,31.8,19.8,43.4c3.1,6.7,6.3,13.7,9.9,20.6H64L64,67L64,67z M448,448H64l0-256h384V448z"></path>
-</svg> <span class="taglib-icon-label"> </span> </span> </div> </div> <div class="card-col-content card-col-gutters"> <span class="lfr-card-title-text truncate-text"> <a href="<%=url%>" title="My Documents">My Documents</a> </span> </div> </div> </div>
-						
-				<%}}%>
-				</div>
+				
 			</div>
 
 			<!-- edit form column -->
@@ -59,7 +56,7 @@ boolean showMyDocs = false;
 
 				<h3 style="font-weight: bold;">Personal info</h3>
 
-
+<aui:row>
 				<div class="form-group col-md-6 ">
 
 
@@ -75,13 +72,15 @@ boolean showMyDocs = false;
 
 
 					<aui:input class="form-control" type="text"
-						value="<%=objUser.getFirstName()%>" name="lastName"
+						value="<%=objUser.getLastName()%>" name="lastName"
 						label="Last Name">
 						<aui:validator name="required" />
 						<aui:validator name="alpha" />
 					</aui:input>
 
 				</div>
+	</aui:row>	
+	<aui:row>		
 				<div class="form-group col-md-6 ">
 
 					<aui:input class="form-control" type="text" readonly="true"
@@ -94,6 +93,8 @@ boolean showMyDocs = false;
 						value="<%=objUser.getEmailAddress()%>" name="email" />
 
 				</div>
+	</aui:row>		
+	<aui:row>		
 				<div class="form-group col-md-6 ">
 					<%if(objUser.getPhones()!=null && objUser.getPhones().size()>0 && objUser.getPhones().get(0)!=null){%>
 					<%String phoneNumber = objUser.getPhones().get(0).getNumber();  %>
@@ -111,26 +112,31 @@ boolean showMyDocs = false;
 						value="<%=objUser.getContact().getSkypeSn()%>" name="skype" />
 
 				</div>
-
+</aui:row>
 				<h3 style="font-weight: bold;">Address</h3>
+				
 
-				<%if(user.getAddresses()!=null&&user.getAddresses().size()>0&&user.getAddresses().get(0)!=null){%>
+				<%if(objUser.getAddresses()!=null&&objUser.getAddresses().size()>0&&objUser.getAddresses().get(0)!=null){
+				%>
+	<aui:row>
 				<div class="form-group col-md-6 ">
 
 					<aui:input class="form-control" type="text"
-						value="<%=user.getAddresses().get(0).getStreet1()%>"
-						name="street1" />
+						value="<%=objUser.getAddresses().get(0).getStreet1()%>"
+						name="street1" id="street1" />
 
 				</div>
 				<div class="form-group col-md-6 ">
 					<aui:input class="form-control" type="text"
-						value="<%=user.getAddresses().get(0).getStreet2()%>"
+						value="<%=objUser.getAddresses().get(0).getStreet2()%>"
 						name="street2" />
 				</div>
+	</aui:row>
+	<aui:row>			
 				<div class="form-group col-md-6 ">
 
 					<aui:input class="form-control" type="text"
-						value="<%=user.getAddresses().get(0).getStreet3()%>"
+						value="<%=objUser.getAddresses().get(0).getStreet3()%>"
 						name="street3" />
 
 				</div>
@@ -138,14 +144,17 @@ boolean showMyDocs = false;
 				<div class="form-group col-md-6 ">
 
 					<aui:input class="form-control" type="text"
-						value="<%=user.getAddresses().get(0).getCity()%>" name="city" />
+						value="<%=objUser.getAddresses().get(0).getCity()%>" name="city" >
+						</aui:input>
 
 				</div>
+	</aui:row>			
+	<aui:row>
 				<div class="form-group col-md-6">
 
 					<aui:select label="Country" name="country">
 						<aui:option label="Select" value="0" />
-						<%for(Country country : countries){ if(user.getAddresses().get(0).getCountryId()==country.getCountryId()){%>
+						<%for(Country country : countries){ if(objUser.getAddresses().get(0).getCountryId()==country.getCountryId()){%>
 						<aui:option label="<%=country.getName()%>"
 							value="<%=country.getCountryId()%>" selected="true" />
 						<%}else{%>
@@ -156,10 +165,12 @@ boolean showMyDocs = false;
 
 				</div>
 				<div class="form-group col-md-6">
-					<aui:input class="form-control" type="text" value="" name="region" />
+					<aui:input class="form-control" type="text" value="<%=objUser.getAddresses().get(0).getZip()%>" name="zipcode" />
 				</div>
+	</aui:row>			
 				<%}else{
  %>
+ <aui:row>
 				<div class="form-group col-md-6 ">
 
 					<aui:input class="form-control" type="text" value="" name="street1" />
@@ -168,6 +179,8 @@ boolean showMyDocs = false;
 				<div class="form-group col-md-6 ">
 					<aui:input class="form-control" type="text" value="" name="street2" />
 				</div>
+</aui:row>
+<aui:row>				
 				<div class="form-group col-md-6 ">
 
 					<aui:input class="form-control" type="text" value="" name="street3" />
@@ -176,9 +189,12 @@ boolean showMyDocs = false;
 
 				<div class="form-group col-md-6 ">
 
-					<aui:input class="form-control" type="text" value="" name="city" />
-
-				</div>
+					<aui:input class="form-control" type="text" value="" name="city" >
+							
+					</aui:input>
+					</div>
+</aui:row>		
+	<aui:row>			
 				<div class="form-group col-md-6">
 
 					<aui:select label="Country" name="country">
@@ -190,17 +206,22 @@ boolean showMyDocs = false;
 					</aui:select>
 
 				</div>
-				<div class="form-group col-md-6">
-					<aui:input class="form-control" type="text" value="" name="region" />
+							
+					<div class="form-group col-md-6">
+					<aui:input class="form-control" type="text" value="" name="zipcode" label="ZIP Code" />
 				</div>
 
+</aui:row>
 				<%}%>
 								<h3 style="font-weight: bold;">Password</h3>
+		<aui:row>						
 				<div class="form-group col-md-9 ">
 
-					<aui:input class="form-control" type="password" name="currentpassword" label="Current Password"/>
+					<aui:input class="form-control" type="password" name="current" label="Current Password"/>
 
 				</div>
+		</aui:row>
+		<aui:row>		
 				<div class="form-group col-md-9 ">
 
 					<aui:input class="form-control" type="password" name="password1"
@@ -208,7 +229,7 @@ boolean showMyDocs = false;
 						<aui:validator name="minLength"
 							errorMessage="Please enter at least eight length password">8</aui:validator>
 						<aui:validator name="custom"
-							errorMessage="Enter at least 1 Upper Case, 1 Lowe Case , 1 Special Character  ">
+							errorMessage="Enter at least 1 Upper Case, 1 Lower Case , 1 Special Character in your password.">
 							function (val, fieldNode, ruleValue) {
 							var result = false;
 							if (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]/.test(val)) {
@@ -218,8 +239,11 @@ boolean showMyDocs = false;
 						}
 </aui:validator>
 					</aui:input>
+					
 
 				</div>
+				</aui:row>
+				<aui:row>
 				<div class="form-group col-md-9 ">
 
 					<aui:input class="form-control" type="password" name="password2" label="Enter Again">
@@ -227,15 +251,20 @@ boolean showMyDocs = false;
 					</aui:input>
 
 				</div>
+				</aui:row>
+				<aui:row>
 				<div class="form-group col-md-9">
-					<input type="button" class="btn btn-primary" value="Save Changes" data-target="#lexFormModal" data-toggle="modal"/>
-					<input type="submit" class="btn btn-primary" value="Save Changes" style="display:none;" id="submit-button"/>
-					<input type="reset" class="btn btn-default" value="Cancel" />
+					 <input type="button" class="btn btn-primary" value="Save Changes" onclick="submitFm()"/>
+	 				 <input type="reset" class="btn btn-default" value="Cancel" />
 				</div>
+				</aui:row>
 
 			</div>
 		</div>
+		</div>
+		</div>
 </aui:form>
+
 
 
 
@@ -300,3 +329,44 @@ boolean showMyDocs = false;
 				</div>
 			</div>
 		</div>
+		
+		<div aria-labelledby="lexSmallModalLabel" class="fade modal" id="lexFormModal1" role="dialog" tabindex="-1" style="display: none;">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button aria-labelledby="Close" class="btn btn-default close" data-dismiss="modal" role="button" type="button" >
+							<svg aria-hidden="true" class="lexicon-icon lexicon-icon-times" viewBox="0 0 512 512">
+								
+<path class="lexicon-icon-outline" d="M295.781 256l205.205-205.205c10.998-10.998 10.998-28.814 0-39.781-10.998-10.998-28.815-10.998-39.781 0l-205.205 205.205-205.205-205.238c-10.966-10.998-28.814-10.998-39.781 0-10.998 10.998-10.998 28.814 0 39.781l205.205 205.238-205.205 205.205c-10.998 10.998-10.998 28.815 0 39.781 5.467 5.531 12.671 8.265 19.874 8.265s14.407-2.734 19.907-8.233l205.205-205.238 205.205 205.205c5.5 5.5 12.703 8.233 19.906 8.233s14.407-2.734 19.906-8.233c10.998-10.998 10.998-28.815 0-39.781l-205.238-205.205z"></path>
+</svg>
+						</button>
+
+						<button class="btn btn-default modal-primary-action-button visible-xs" type="button">
+							<svg aria-hidden="true" class="lexicon-icon lexicon-icon-check" viewBox="0 0 512 512">
+								
+<path class="lexicon-icon-outline" d="M502.091 60.993c-9.909-9.91-25.962-9.91-35.843 0l-336.988 336.988-83.508-83.451c-9.881-9.909-25.962-9.909-35.843 0-9.909 9.909-9.909 25.962 0 35.843l98.257 98.257c2.608 2.608 5.679 4.433 8.924 5.679 4.028 2.464 8.403 4.115 12.952 4.115 6.49 0 12.981-2.464 17.936-7.418l354.112-354.141c9.909-9.909 9.909-25.962 0-35.871l0-0.001z"></path>
+</svg>
+						</button>
+
+						<h4 class="modal-title" id="lexFormModal">Alert</h4>
+					</div>
+
+					<div class="modal-body">
+						<h4>Your forms contains errors.</h4>
+					</div>
+
+					
+				</div>
+			</div>
+		</div>
+		
+<script>
+function submitFm() {
+	 var x = document.getElementsByClassName("form-validator-stack");
+	 if(x && x.length == 0){
+		 $('#lexFormModal').modal('show');
+	 }else{
+		 $('#lexFormModal1').modal('show');
+	 } 
+}
+</script>

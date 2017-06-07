@@ -67,7 +67,7 @@ $(document).ready(function() {
 </script>
 
        
-            
+            <div  id="userDocs">
             <div id="filter_col1" data-column="0"  class="advanceFilter">
               	Name
                 <input type="text" class="column_filter" id="col0_filter">
@@ -133,4 +133,5 @@ $(document).ready(function() {
  
    </tbody>
     </table>
+    </div>
  

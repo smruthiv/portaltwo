@@ -18,7 +18,7 @@ ft.applyPattern(pattern);
 %>
 
 
-
+<div  id="userDocs">
             <div class="panel-heading myclass">
               <h3 class="panel-title"><%=user1.getFirstName().concat(" ").concat(user1.getLastName()) %></h3>
             </div>
@@ -108,9 +108,9 @@ ft.applyPattern(pattern);
                   </table>
                   
                   
-                  <a href="/group/contacts/employee-directory" class="btn btn-primary">Back</a>
+                  <a href="/group/hr/employee-directory" class="btn btn-primary">Back</a>
                
                 </div>
               </div>
             </div>
-                 
+          </div>       

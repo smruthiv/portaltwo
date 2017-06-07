@@ -33,7 +33,7 @@ public class EmployeeDirectoryModelListener extends BaseModelListener<User> {
 
 	@Override
 	public void onAfterCreate(User model) throws ModelListenerException {
-		
+		System.out.println("On after update");
 		List<PasswordPolicy> passwordPolicies = PasswordPolicyLocalServiceUtil.getPasswordPolicies(0,
 				PasswordPolicyLocalServiceUtil.getPasswordPoliciesCount());
 		PasswordPolicy passwordPolicy = null;
@@ -43,6 +43,7 @@ public class EmployeeDirectoryModelListener extends BaseModelListener<User> {
 			}
 		}
 		if (passwordPolicy != null) {
+			System.out.println("Password policy assigned");
 			UserLocalServiceUtil.addPasswordPolicyUsers(passwordPolicy.getPasswordPolicyId(),
 					new long[] { model.getUserId() });
 		}

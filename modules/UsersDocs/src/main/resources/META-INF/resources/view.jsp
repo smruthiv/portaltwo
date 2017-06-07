@@ -30,16 +30,13 @@ if(userGroup!=null){
 	 users = UserLocalServiceUtil.getUserGroupUsers(userGroup.getUserGroupId());
 }
 
-String pattern="dd-MM-yyyy";
-SimpleDateFormat ft = new SimpleDateFormat();
-ft.applyPattern(pattern);
 %>
 
     <portlet:renderURL var="advanceView" >
 				<portlet:param name="jspPage" value="/advanceView.jsp"/>
 				
 			</portlet:renderURL>
-
+<div id="directory">
 <%if(userGroupId == null || (userGroupId !=null && userGroupId.equals("0"))){ %>
 <div class="alert alert-warning confmsg" role="alert">
   <strong>Configuration:-</strong> Please select User Group from configuration to display users list.
@@ -91,6 +88,7 @@ ft.applyPattern(pattern);
    </tbody>
     </table>
     <%}%>
+     </div>
  	<script>
 	$(document).ready(function() {
 

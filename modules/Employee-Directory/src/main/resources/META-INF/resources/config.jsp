@@ -26,7 +26,7 @@ String userGroupId = portletPreferences.getValue("userGroupId", "0");
 List<UserGroup> users = UserGroupLocalServiceUtil.getUserGroups(0, UserGroupLocalServiceUtil.getUserGroupsCount());
 %>
 
-
+<div  id="userDocs">
 <aui:form action="<%= configurationActionURL %>" method="post" name="configurationFm" >
 <div class="my">
 	<aui:select label="User Group" name="userGroup" >
@@ -51,4 +51,5 @@ List<UserGroup> users = UserGroupLocalServiceUtil.getUserGroups(0, UserGroupLoca
 
  </div>
 </aui:form>
+</div>
 
