@@ -18,6 +18,14 @@
 <%String emailImageURL = themeDisplay.getPathThemeImages() + "/icons/user_email.png";%>
 <%String passwordImageURL = themeDisplay.getPathThemeImages() + "/icons/password.png";%>
 <%String headerImageURL = themeDisplay.getPathThemeImages() + "/sign_in_header.PNG";%>
+
+<style>
+.policy{
+display:block !important;
+}
+
+
+</style>
 <div id="signIn">
 <div id="signIn_header"><img src="<%=headerImageURL%>"/></div>
 <c:choose>
