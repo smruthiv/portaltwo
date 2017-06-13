@@ -8,6 +8,8 @@ import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.ResourcePermission;
 import com.liferay.portal.kernel.model.Role;
@@ -28,7 +30,6 @@ import com.liferay.portal.kernel.util.WebKeys;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -53,7 +54,11 @@ import org.osgi.service.component.annotations.Component;
 	service = Portlet.class
 )
 public class ImageGalleryPortlet extends MVCPortlet {
-	public static void createDocument(ActionRequest req,ActionResponse res) throws PortalException, SystemException{
+	private static Log logger = LogFactoryUtil.getLog(ImageGalleryPortlet.class);
+	private static final String SITE_MEMEBER =  "Site Member";
+	
+	
+	public static void createDocument(ActionRequest req,ActionResponse res){
 		try{
 		ThemeDisplay themedisplay = (ThemeDisplay) req.getAttribute(WebKeys.THEME_DISPLAY);
 		long groupId = themedisplay.getScopeGroupId();
@@ -65,7 +70,7 @@ public class ImageGalleryPortlet extends MVCPortlet {
 			if("ImageGalary".equalsIgnoreCase(folder.getName())){
 			long folderId = folder.getFolderId();
 			Folder dlforler =  DLAppLocalServiceUtil.addFolder(userId, themedisplay.getScopeGroupId(), folderId, eventFolderName, eventFolderDesc, new ServiceContext());
-        	Role role = RoleLocalServiceUtil.getRole(dlforler.getCompanyId(), "Site Member");
+        	Role role = RoleLocalServiceUtil.getRole(dlforler.getCompanyId(), SITE_MEMEBER);
         	ResourcePermissionLocalServiceUtil.setResourcePermissions(themedisplay.getCompanyId(), DLFolder.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, String.valueOf(dlforler.getFolderId()), role.getRoleId(), new String[]{"VIEW"});
 			res.setRenderParameter("newFolderId", dlforler.getFolderId()+"");
 			res.setRenderParameter("newFolderName", eventFolderName+"");
@@ -74,45 +79,30 @@ public class ImageGalleryPortlet extends MVCPortlet {
 		}
 		}
 		catch(Exception exception){
-			
+			logger.error(exception);
 		}
 	}
 	
-	public static void uploadImages(ActionRequest req,ActionResponse res) throws PortalException, SystemException, IOException{
+	public static void uploadImages(ActionRequest req,ActionResponse res) {
+		try{
 		ThemeDisplay themedisplay = (ThemeDisplay) req.getAttribute(WebKeys.THEME_DISPLAY);
-		//System.out.println("uploadImages");
 		 UploadPortletRequest uploadrequest = PortalUtil.getUploadPortletRequest(req);
-		 //Map<String, FileItem[]> files =uploadrequest.getMultipartParameterMap();
-		 //System.out.println(" Multi files size  : " + files.size());
 		 final FileItem[] arr = uploadrequest.getMultipartParameterMap().get("upload_images");
-		 //System.out.println(arr.length);
-		 //File file = uploadrequest.getFile("upload_images");
-		  //	System.out.println(file);
 	        final long repoId = themedisplay.getScopeGroupId();
 	        final long folderId = ParamUtil.getLong(uploadrequest, "newlyCreatedFolder");
-	        
-	       // System.out.println("folderId getting back : " + folderId);
 	        for (final FileItem file : arr) {
 	        	InputStream fis = file.getInputStream();
-	        //	System.out.println("fis : " + fis + " name of file : " + file.getFileName());
-	            /*FileEntry entry = DLAppServiceUtil.addFileEntry(repoId,
-	                    folderId, fi.getFileName(), fi.getContentType(), fi.getFileName(), null, null, fi.getInputStream(),
-	                    fi.getSize(), new ServiceContext());*/
 	        	FileEntry entry = DLAppServiceUtil.addFileEntry(repoId,folderId,file.getFileName(), null, file.getFileName(), null, null, fis,file.getStoreLocation().getTotalSpace(), new ServiceContext());
-	        	Role role = RoleLocalServiceUtil.getRole(entry.getCompanyId(), "Site Member");
-        		long roleId = role.getRoleId(); /* obtain a roleId here */
+	        	Role role = RoleLocalServiceUtil.getRole(entry.getCompanyId(), SITE_MEMEBER);
+        		long roleId = role.getRoleId();
         		ResourcePermission resourcePermission = null;
         		             try
         		            {
         		                resourcePermission = ResourcePermissionLocalServiceUtil.getResourcePermission(entry.getCompanyId(),
         		                        DLFileEntry.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, String.valueOf(entry
         		                                 .getPrimaryKey()), roleId);
-        		 
-        		               
         		                 if (Validator.isNotNull(resourcePermission))
         		                {
-        		                 
-        		                    //resourcePermission.setActionIds(actionIds);
         		                    ResourcePermissionLocalServiceUtil.updateResourcePermission(resourcePermission);
         		                }
         		            } catch (Exception e)
@@ -125,41 +115,30 @@ public class ImageGalleryPortlet extends MVCPortlet {
         		                resourcePermission.setScope(ResourceConstants.SCOPE_INDIVIDUAL);
         		                resourcePermission.setPrimKey(String.valueOf(entry.getPrimaryKey()));
         		                resourcePermission.setRoleId(roleId);
-        		                resourcePermission.setActionIds(1);// (ActionKeys.VIEW);
+        		                resourcePermission.setActionIds(1);
         		                ResourcePermissionLocalServiceUtil.addResourcePermission(resourcePermission);
+        		                logger.error(e);
         		            }
         		
         }
-       // FileEntry entry = DLAppServiceUtil.addFileEntry(repoId,folderId,file.getName(), null, file.getName(), null, null, fis,file.getTotalSpace(), new ServiceContext());
+		}
+		catch(Exception e){
+			logger.error(e);			
+		}
 	}
 
 	
 	public static void uploadImagesOldFolder(ActionRequest req,ActionResponse res) throws PortalException, SystemException, IOException{
 		ThemeDisplay themedisplay = (ThemeDisplay) req.getAttribute(WebKeys.THEME_DISPLAY);
-		//System.out.println("uploadImagesOldFolder");
 		 UploadPortletRequest uploadrequest = PortalUtil.getUploadPortletRequest(req);
-		 //Map<String, FileItem[]> files =uploadrequest.getMultipartParameterMap();
-		//System.out.println(" Multi files size  : " + files.size());
 		 final FileItem[] arr = uploadrequest.getMultipartParameterMap().get("upload_images");
-		//System.out.println(arr.length);
-		 //File file = uploadrequest.getFile("upload_images");
-		  //	System.out.println(file);
 	        final long repoId = themedisplay.getScopeGroupId();
 	        final long folderId = ParamUtil.getLong(uploadrequest, "eventFolder");
-	       //System.out.println(" folder id " + folderId);
-	       //System.out.println("folderId getting back : " + folderId);
 	        for (final FileItem file : arr) {
 	        	InputStream fis = file.getInputStream();
-	        	//System.out.println("fis : " + fis + " name of file : " + file.getFileName());
-	            /*FileEntry entry = DLAppServiceUtil.addFileEntry(repoId,
-	                    folderId, fi.getFileName(), fi.getContentType(), fi.getFileName(), null, null, fi.getInputStream(),
-	                    fi.getSize(), new ServiceContext());*/
 	        	FileEntry entry = DLAppServiceUtil.addFileEntry(repoId,folderId,file.getFileName(), null, file.getFileName(), null, null, fis,file.getStoreLocation().getTotalSpace(), new ServiceContext());
-	        	Role role = RoleLocalServiceUtil.getRole(entry.getCompanyId(), "Site Member");
-	        	
-	        	
-	        	//setting view permission to uploading images for sitemember role.
-        		long roleId = role.getRoleId(); /* obtain a roleId here */
+	        	Role role = RoleLocalServiceUtil.getRole(entry.getCompanyId(), SITE_MEMEBER);
+        		long roleId = role.getRoleId();
         		ResourcePermission resourcePermission = null;
         		             try
         		            {
@@ -167,16 +146,12 @@ public class ImageGalleryPortlet extends MVCPortlet {
         		                        DLFileEntry.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, String.valueOf(entry
         		                                 .getPrimaryKey()), roleId);
         		 
-        		               
         		                 if (Validator.isNotNull(resourcePermission))
         		                {
-        		                 
-        		                    //resourcePermission.setActionIds(actionIds);
         		                    ResourcePermissionLocalServiceUtil.updateResourcePermission(resourcePermission);
         		                }
         		            } catch (Exception e)
         		            {
-        		
         		                resourcePermission = ResourcePermissionLocalServiceUtil
         		                        .createResourcePermission(CounterLocalServiceUtil.increment());
         		                resourcePermission.setCompanyId(entry.getCompanyId());
@@ -184,12 +159,11 @@ public class ImageGalleryPortlet extends MVCPortlet {
         		                resourcePermission.setScope(ResourceConstants.SCOPE_INDIVIDUAL);
         		                resourcePermission.setPrimKey(String.valueOf(entry.getPrimaryKey()));
         		                resourcePermission.setRoleId(roleId);
-        		                resourcePermission.setActionIds(1);// (ActionKeys.VIEW);
+        		                resourcePermission.setActionIds(1);
         		                ResourcePermissionLocalServiceUtil.addResourcePermission(resourcePermission);
+        		                logger.error(e);
         		            }
-	        	
 	        }
-	       // FileEntry entry = DLAppServiceUtil.addFileEntry(repoId,folderId,file.getName(), null, file.getName(), null, null, fis,file.getTotalSpace(), new ServiceContext());
 	}
 
 }
