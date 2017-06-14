@@ -87,24 +87,18 @@ List<DLFolder> folderList = DLFolderLocalServiceUtil.getFolders(groupId,0);
 
 
 boolean isGalleryFolderExist = false;
-//System.out.println(folderList.size());
 for(DLFolder folder : folderList){
-	//System.out.println("folde name :::: " + folder.getName());
-	if(folder.getName().equalsIgnoreCase("ImageGalary")){
+	if(folder.getName().equalsIgnoreCase("Image Gallery")){
 		isGalleryFolderExist = true;
-		System.out.println(" galary folder already existed ");
 		subfolderList = DLFolderLocalServiceUtil.getFolders(groupId,folder.getFolderId());
-		//System.out.println(" subfolder list " + subfolderList.size());
 		if(subfolderList.size()!=0){
 			for(DLFolder eventFolder : subfolderList){
-			//	System.out.println("subfolder name :::: " + eventFolder.getName());
 				List<DLFileEntry> fileEntries = DLFileEntryLocalServiceUtil.getFileEntries(groupId, eventFolder.getFolderId());
 				String url = "";
 				if(fileEntries.size()!=0){
 					DLFileEntry file = fileEntries.get(0);
 					url = themedisplay.getPortalURL() + themedisplay.getPathContext() + "/documents/" + themedisplay.getScopeGroupId() + "/" + 
 							file.getFolderId() +  "/" +file.getTitle() ;
-	        	 	// System.out.println("DL Link=>"+url);
 				}
 				
 			}
@@ -114,17 +108,6 @@ for(DLFolder folder : folderList){
 %>
 
 	<div id = "createDoc">
-		
-<%-- 		<aui:form action="<%=createDocumentURL %>" cssClass="forms">
-			<span class="heading"><b>Create a New Event Folder..</b></span>
-			<br><br>
-			<span>
-			<aui:input name="folderName" type = "text" placeholder="event name" required="true" label="Folder Name"></aui:input>
-			<aui:input name="folderDesc" type = "text" placeholder="event description" label="Event Description"></aui:input>
-			<aui:button name="create" type="submit" value="Create Event Folder"></aui:button>
-			</span>
-		</aui:form>
-		 --%>
 		<aui:form action="<%=uploadImagesOldFolderURL %>"  enctype="multipart/form-data" method="post" cssClass="forms">
 			<span class="heading"><b>Upload Images in already existing Event Folder..</b></span>
 			<br><br>
@@ -133,7 +116,9 @@ for(DLFolder folder : folderList){
 			<aui:option value="select">--Select--</aui:option>
 				<%int size=subfolderList.size();
 				for(int i=0;i<size;i++){%>
+				<%if(!subfolderList.get(i).isInTrash()){ %>
 				<aui:option value="<%=subfolderList.get(i).getFolderId()%>" ><%=subfolderList.get(i).getName()%></aui:option>
+				<%}%>
 				<%}%>
 			</aui:select>
 			 <aui:input name="upload_images" label="Upload Images" type = "file" required="true" multiple="<%=true%>" ></aui:input>

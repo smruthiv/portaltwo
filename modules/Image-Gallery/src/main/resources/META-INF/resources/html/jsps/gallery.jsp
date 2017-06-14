@@ -174,7 +174,6 @@
 				
 				url = themedisplay.getPortalURL() + themedisplay.getPathContext() + "/documents/" + themedisplay.getScopeGroupId() + "/" + 
 						file.getFolderId() +  "/" +file.getTitle() ;
-				//System.out.println("URL : " + url);
 		    %>
 				 <div data-p="150.00">
 	                <img data-u="image" id="<%=file.getFolderId()%>" src="<%=url%>" alt= "<%=file.getName()%>" />

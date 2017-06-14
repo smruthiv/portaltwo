@@ -73,9 +73,8 @@ boolean isGalleryFolderExist = false;
 //System.out.println(folderList.size());
 for(DLFolder folder : folderList){
 	//System.out.println("folde name :::: " + folder.getName());
-	if(folder.getName().equalsIgnoreCase("ImageGalary")){
+	if(folder.getName().equalsIgnoreCase("Image Gallery")){
 		isGalleryFolderExist = true;
-		System.out.println(" galary folder already existed ");
 		subfolderList = DLFolderLocalServiceUtil.getFolders(groupId,folder.getFolderId());
 		//System.out.println(" subfolder list " + subfolderList.size());
 		if(subfolderList.size()!=0){
@@ -111,8 +110,7 @@ for(DLFolder folder : folderList){
 }
 
 if(isGalleryFolderExist==false){
-		System.out.println(" creating galary folder ");
-			DLFolder dlforler = DLFolderLocalServiceUtil.addFolder(userId, groupId, groupId, false, 0, "ImageGalary", "ImageGalary Root Folder",false, new ServiceContext());
+		DLFolder dlforler = DLFolderLocalServiceUtil.addFolder(userId, groupId, groupId, false, 0, "Image Gallery", "Image Gallery Root Folder",false, new ServiceContext());
 }
 %>
 </div>

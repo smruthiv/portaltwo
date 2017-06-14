@@ -44,10 +44,9 @@ List<DLFolder> folderList = DLFolderLocalServiceUtil.getFolders(groupId,0);
 
 
 boolean isGalleryFolderExist = false;
-//System.out.println(folderList.size());
 for(DLFolder folder : folderList){
 	//System.out.println("folde name :::: " + folder.getName());
-	if(folder.getName().equalsIgnoreCase("ImageGalary")){
+	if(folder.getName().equalsIgnoreCase("Image Gallery")){
 		isGalleryFolderExist = true;
 		//System.out.println(" galary folder already existed ");
 		subfolderList = DLFolderLocalServiceUtil.getFolders(groupId,folder.getFolderId());

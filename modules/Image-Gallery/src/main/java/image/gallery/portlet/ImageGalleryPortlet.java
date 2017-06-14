@@ -67,7 +67,7 @@ public class ImageGalleryPortlet extends MVCPortlet {
 		String eventFolderName = ParamUtil.getString(req, "folderName");
 		String eventFolderDesc = ParamUtil.getString(req, "folderDesc");
 		for(DLFolder folder : folderList){
-			if("ImageGalary".equalsIgnoreCase(folder.getName())){
+			if("Image Gallery".equalsIgnoreCase(folder.getName())){
 			long folderId = folder.getFolderId();
 			Folder dlforler =  DLAppLocalServiceUtil.addFolder(userId, themedisplay.getScopeGroupId(), folderId, eventFolderName, eventFolderDesc, new ServiceContext());
         	Role role = RoleLocalServiceUtil.getRole(dlforler.getCompanyId(), SITE_MEMEBER);
