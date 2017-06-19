@@ -1,6 +1,5 @@
 package SSI.Profile.portlet;
 
-import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.io.ByteArrayFileInputStream;
@@ -35,7 +34,6 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
-import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -124,7 +122,6 @@ public class SSIProfilePortlet extends MVCPortlet {
 				String zipcode = ParamUtil.get(actionRequest, "zipcode", "");
 				long countryId =(long)ParamUtil.get(actionRequest, "country", 0);
 				if(!street1.isEmpty()&&!city.isEmpty()){
-					//System.out.println("HELLOs"+user.getUserId());
 					Address address1 = AddressLocalServiceUtil.addAddress(user.getUserId(), Contact.class.getName(), user.getContactId(), street1, street2, street3, city, zipcode, 0, countryId, 11000, false, false, new ServiceContext());
 				}
 		}
@@ -167,19 +164,24 @@ public class SSIProfilePortlet extends MVCPortlet {
 			throws IOException, PortletException {
 		ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		User objUser = themeDisplay.getUser();
+		_log.info("Render Method called");
 		super.render(renderRequest, renderResponse);
 	}
 	
 	
 	public boolean validatePassword(ActionRequest actionRequest, ActionResponse actionResponse){
 	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-	_log.info(":::::::::::::calling updatePassword::::::::::::::::");
+	_log.info(":::::::::::::calling validate Password::::::::::::::::");
 	String current = ParamUtil.getString(actionRequest, "current","");
 	String password1 = ParamUtil.getString(actionRequest, "password1","");
 	String password2 = ParamUtil.getString(actionRequest, "password2","");
+	_log.info(":::::::::::::Current Password::::::::::::::::" + current+"======");
+	_log.info(":::::::::::::Password 1::::::::::::::::" + password1+"======");
+	_log.info(":::::::::::::Password 2::::::::::::::::" + password2+"======");
 	String street1 = ParamUtil.get(actionRequest, "street1", "");
 	String city = ParamUtil.get(actionRequest, "city", "");
 	boolean isErrorOccured=false;
+	_log.info(":::::::::::::Street 1::::::::::::::::" + street1+"======");
 	if(street1.isEmpty()&&city.isEmpty()){
 		
 	}
@@ -212,7 +214,6 @@ public class SSIProfilePortlet extends MVCPortlet {
 	
 	
 	String errorKey = "";
-
 	try {
 	String authType = themeDisplay.getCompany().getAuthType();
 	String login = "";
@@ -241,6 +242,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 		SessionErrors.add(actionRequest, "invalid-current-password");
 		isErrorOccured = true;
 	}
+	
 	} catch (PortalException e) {
 	_log.error(e.getMessage(), e);
 	} catch (SystemException e) {
