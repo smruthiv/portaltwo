@@ -109,14 +109,14 @@ if(isGalleryFolderExist==false){
 }
 %>
 </div>
-<hr>
-<div id = "createDoc">
 	<portlet:renderURL var="addImages">
 		   					 <portlet:param name="jspPage" value="/html/jsps/addImages.jsp" />
 	</portlet:renderURL>
 	<portlet:renderURL var="addImagesToOldEvents">
 		   					 <portlet:param name="jspPage" value="/html/jsps/editEventsFolder.jsp" />
 	</portlet:renderURL>
+<hr>
+<div id = "createDoc">
 	<div id="actions">
 		 <aui:a href="<%= addImages %>"> <button  class = "btn btn-primary" type="button" >Create a New Event</button></aui:a>
 		 <aui:a href="<%= addImagesToOldEvents %>"><button  class = "btn btn-primary" type="button" >Upload Photos to Existing Event</button></aui:a>
