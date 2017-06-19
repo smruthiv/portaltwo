@@ -24,7 +24,6 @@ margin:5%;
 <%
 String userGroupId = portletPreferences.getValue("userGroupId", "0");
 List<UserGroup> users = UserGroupLocalServiceUtil.getUserGroups(0, UserGroupLocalServiceUtil.getUserGroupsCount());
-System.out.println(userGroupId);
 %>
 
 

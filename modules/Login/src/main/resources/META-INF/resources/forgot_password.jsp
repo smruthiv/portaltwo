@@ -18,7 +18,6 @@
 
 <%
 User user2 = (User)request.getAttribute(WebKeys.FORGOT_PASSWORD_REMINDER_USER);
-
 if (Validator.isNull(authType)) {
 	authType = company.getAuthType();
 }
@@ -53,7 +52,7 @@ if (reminderAttempts == null) {
 		UserLockoutException.PasswordPolicyLockout ule = (UserLockoutException.PasswordPolicyLockout)errorException;
 		%>
 
-		<liferay-ui:message arguments="<%= ule.user.getUnlockDate() %>" key="this-account-is-locked-until-x" translateArguments="<%= false %>" />
+		<liferay-ui:message arguments="<%= ule.user.getUnlockDate() %>" key="this-account-is-locked" translateArguments="<%= false %>" />
 	</liferay-ui:error>
 
 	<liferay-ui:error exception="<%= UserReminderQueryException.class %>" message="your-answer-does-not-match-what-is-in-our-database" />

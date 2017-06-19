@@ -13,7 +13,7 @@
  * details.
  */
 --%>
-
+<%@page import="com.liferay.portal.kernel.util.PortalUtil"%>
 <%@ include file="/init.jsp" %>
 <%String emailImageURL = themeDisplay.getPathThemeImages() + "/icons/user_email.png";%>
 <%String passwordImageURL = themeDisplay.getPathThemeImages() + "/icons/password.png";%>
@@ -30,10 +30,11 @@ display:block !important;
 <div id="signIn_header"><img src="<%=headerImageURL%>"/></div>
 <c:choose>
 	<c:when test="<%= themeDisplay.isSignedIn() %>">
-
+	
 		<%
+		HttpServletResponse res = PortalUtil.getHttpServletResponse(renderResponse);
+		res.sendRedirect("/c/portal/logout");
 		String signedInAs = HtmlUtil.escape(user.getFullName());
-
 		if (themeDisplay.isShowMyAccountIcon() && (themeDisplay.getURLMyAccount() != null)) {
 			String myAccountURL = String.valueOf(themeDisplay.getURLMyAccount());
 

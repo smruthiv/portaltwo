@@ -133,8 +133,6 @@
  
    
 <%
-	//String newFolderId = request.getParameter("newFolderId"); 
-	//System.out.println("new folder id " + newFolderId); 
 	
 	List<DLFolder> subfolderList = new ArrayList<DLFolder>();
 	ThemeDisplay themedisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
@@ -142,7 +140,6 @@
 	long foldeId = 0;
 	HttpSession httpSession = request.getSession();
 	String folderID = request.getParameter("folderId");
-	//long folderId = (Long)httpSession.getAttribute("imageFolderId");
 	String eventName = "";  
 	if(folderID == null){
 		folderID = "0";

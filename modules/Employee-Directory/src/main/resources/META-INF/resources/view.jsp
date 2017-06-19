@@ -16,6 +16,19 @@
 
 <portlet:defineObjects />
 <liferay-theme:defineObjects />
+	<script>
+	$(document).ready(function() {
+
+    $('#example').dataTable( {
+    	 "order": [],
+        "aoColumnDefs": [
+                         
+            { 'bSortable': false, 'aTargets': [ 0 ] }
+         ]
+  });
+
+} );
+</script>
 <%
 
 
@@ -29,10 +42,6 @@ List<User> users = new ArrayList<User>();
 if(userGroup!=null){
 	 users = UserLocalServiceUtil.getUserGroupUsers(userGroup.getUserGroupId());
 }
-
-String pattern="dd-MM-yyyy";
-SimpleDateFormat ft = new SimpleDateFormat();
-ft.applyPattern(pattern);
 
 %>
 
@@ -92,16 +101,4 @@ ft.applyPattern(pattern);
     
     <%}%>
     </div>
- 	<script>
-	$(document).ready(function() {
-
-    $('#example').dataTable( {
-    	 "order": [],
-        "aoColumnDefs": [
-                         
-            { 'bSortable': false, 'aTargets': [ 0 ] }
-         ]
-  });
-
-} );
-</script>
+ 

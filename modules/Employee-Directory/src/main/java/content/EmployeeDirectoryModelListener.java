@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.model.BaseModelListener;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.PasswordPolicyLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 
 import java.util.List;
 
@@ -33,17 +34,16 @@ public class EmployeeDirectoryModelListener extends BaseModelListener<User> {
 
 	@Override
 	public void onAfterCreate(User model) throws ModelListenerException {
-		System.out.println("On after update");
 		List<PasswordPolicy> passwordPolicies = PasswordPolicyLocalServiceUtil.getPasswordPolicies(0,
 				PasswordPolicyLocalServiceUtil.getPasswordPoliciesCount());
 		PasswordPolicy passwordPolicy = null;
-		for (int i = 0; i < passwordPolicies.size(); i++) {
-			if (passwordPolicies.get(i).getName().equals("SSi Password Policy")) {
-				passwordPolicy = passwordPolicies.get(i);
+		String defaultPolicy = PropsUtil.get("passwords.default.policy.name");
+		for (PasswordPolicy policy : passwordPolicies) {
+			if (defaultPolicy.equals(policy.getName())) {
+				passwordPolicy = policy;
 			}
 		}
 		if (passwordPolicy != null) {
-			System.out.println("Password policy assigned");
 			UserLocalServiceUtil.addPasswordPolicyUsers(passwordPolicy.getPasswordPolicyId(),
 					new long[] { model.getUserId() });
 		}

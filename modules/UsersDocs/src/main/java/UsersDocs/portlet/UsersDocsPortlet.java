@@ -34,7 +34,6 @@ public class UsersDocsPortlet extends MVCPortlet {
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws IOException, PortletException {
 		// TODO Auto-generated method stub
-		System.out.println("Hii");
 		super.render(renderRequest, renderResponse);
 	}
 }

@@ -8,13 +8,8 @@
 <portlet:defineObjects />
 
 <%
-System.out.println("MU");
 long id = Long.parseLong(request.getParameter("editId"));
 User user1= UserLocalServiceUtil.getUser(id);
-String pattern="dd-MM-yyyy";
-SimpleDateFormat ft = new SimpleDateFormat();
-ft.applyPattern(pattern);
-
 %>
 
 

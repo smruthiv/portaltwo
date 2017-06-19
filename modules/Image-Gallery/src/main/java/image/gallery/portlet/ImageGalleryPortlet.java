@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.upload.FileItem;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -56,6 +57,8 @@ import org.osgi.service.component.annotations.Component;
 public class ImageGalleryPortlet extends MVCPortlet {
 	private static Log logger = LogFactoryUtil.getLog(ImageGalleryPortlet.class);
 	private static final String SITE_MEMEBER =  "Site Member";
+	private static final String IMAGE_GALLERY =  PropsUtil.get("image.gallery");
+	
 	
 	
 	public static void createDocument(ActionRequest req,ActionResponse res){
@@ -67,7 +70,7 @@ public class ImageGalleryPortlet extends MVCPortlet {
 		String eventFolderName = ParamUtil.getString(req, "folderName");
 		String eventFolderDesc = ParamUtil.getString(req, "folderDesc");
 		for(DLFolder folder : folderList){
-			if("Image Gallery".equalsIgnoreCase(folder.getName())){
+			if(IMAGE_GALLERY.equalsIgnoreCase(folder.getName())){
 			long folderId = folder.getFolderId();
 			Folder dlforler =  DLAppLocalServiceUtil.addFolder(userId, themedisplay.getScopeGroupId(), folderId, eventFolderName, eventFolderDesc, new ServiceContext());
         	Role role = RoleLocalServiceUtil.getRole(dlforler.getCompanyId(), SITE_MEMEBER);

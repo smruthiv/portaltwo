@@ -70,16 +70,12 @@ List<DLFolder> folderList = DLFolderLocalServiceUtil.getFolders(groupId,0);
 HttpSession httpSession = request.getSession();
 
 boolean isGalleryFolderExist = false;
-//System.out.println(folderList.size());
 for(DLFolder folder : folderList){
-	//System.out.println("folde name :::: " + folder.getName());
 	if(folder.getName().equalsIgnoreCase("Image Gallery")){
 		isGalleryFolderExist = true;
 		subfolderList = DLFolderLocalServiceUtil.getFolders(groupId,folder.getFolderId());
-		//System.out.println(" subfolder list " + subfolderList.size());
 		if(subfolderList.size()!=0){
 			for(DLFolder eventFolder : subfolderList){
-			//	System.out.println("subfolder name :::: " + eventFolder.getName());
 			if(!eventFolder.isInTrash()){
 				List<DLFileEntry> fileEntries = DLFileEntryLocalServiceUtil.getFileEntries(groupId, eventFolder.getFolderId());
 				String url = "";
@@ -87,7 +83,6 @@ for(DLFolder folder : folderList){
 					DLFileEntry file = fileEntries.get(0);
 					url = themedisplay.getPortalURL() + themedisplay.getPathContext() + "/documents/" + themedisplay.getScopeGroupId() + "/" + 
 							file.getFolderId() +  "/" +file.getTitle() ;
-	        	 	// System.out.println("DL Link=>"+url);
 				}
 				%>
 				<div style="display:none">

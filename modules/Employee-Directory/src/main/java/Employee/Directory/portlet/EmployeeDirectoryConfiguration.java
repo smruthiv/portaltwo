@@ -28,10 +28,6 @@ import org.osgi.service.component.annotations.ConfigurationPolicy;
 		)
 public class EmployeeDirectoryConfiguration extends DefaultConfigurationAction{
 	@Override
-	public void render(RenderRequest request, RenderResponse response) throws PortletException, IOException {
-		super.render(request, response);
-	}
-	@Override
 	public void processAction(PortletConfig portletConfig, ActionRequest actionRequest, ActionResponse actionResponse)
 			throws Exception {
 		String userGroupId =ParamUtil.getString(actionRequest,"userGroup");

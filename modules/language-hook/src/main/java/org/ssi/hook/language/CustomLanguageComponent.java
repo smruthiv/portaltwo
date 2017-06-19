@@ -15,7 +15,6 @@ ResourceBundle bundle = ResourceBundle.getBundle("content.Language", UTF8Control
 
  @Override
  protected Object handleGetObject(String key) {
- System.out.println("getting key"+key);
  return bundle.getObject(key);
  }
 

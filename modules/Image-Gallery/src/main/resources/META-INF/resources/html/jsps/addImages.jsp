@@ -12,8 +12,6 @@
 <%
 	String newFolderId = request.getParameter("newFolderId"); 
 	String newFolderName = request.getParameter("newFolderName");
-	System.out.println("new folder id " + newFolderId); 
-
 %>
 <style>
 	.form{
@@ -45,22 +43,17 @@ List<DLFolder> folderList = DLFolderLocalServiceUtil.getFolders(groupId,0);
 
 boolean isGalleryFolderExist = false;
 for(DLFolder folder : folderList){
-	//System.out.println("folde name :::: " + folder.getName());
 	if(folder.getName().equalsIgnoreCase("Image Gallery")){
 		isGalleryFolderExist = true;
-		//System.out.println(" galary folder already existed ");
 		subfolderList = DLFolderLocalServiceUtil.getFolders(groupId,folder.getFolderId());
-		//System.out.println(" subfolder list " + subfolderList.size());
 		if(subfolderList.size()!=0){
 			for(DLFolder eventFolder : subfolderList){
-			//	System.out.println("subfolder name :::: " + eventFolder.getName());
 				List<DLFileEntry> fileEntries = DLFileEntryLocalServiceUtil.getFileEntries(groupId, eventFolder.getFolderId());
 				String url = "";
 				if(fileEntries.size()!=0){
 					DLFileEntry file = fileEntries.get(0);
 					url = themedisplay.getPortalURL() + themedisplay.getPathContext() + "/documents/" + themedisplay.getScopeGroupId() + "/" + 
 							file.getFolderId() +  "/" +file.getTitle() ;
-	        	 	// System.out.println("DL Link=>"+url);
 				}
 				
 			}

@@ -202,26 +202,6 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 	    	  	} 
 		}
 }
-	  
-		  
-
-
-	  private User createPortalUser(String userName, final long companyId,
-	           final long userId, final Locale locale) {
-	       User user = null;
-	       try {
-	           user = UserLocalServiceUtil.addUser(userId, companyId, false,
-	                   "test", "test", false, userName + "screenName", userName
-	                           + "@liferay.com", 0L, "", locale, userName
-	                           + "firstName", "middleName", userName + "lastName",
-	                   0, 0, false, 0, 1, 1970, "Job Title", null, null, null,
-	                   null, false, new ServiceContext());
-
-	       } catch (Exception e) {
-	           logger.error("Portal user creation failed " + e.getMessage());
-	       }
-	       return user;
-	   }
 
 	  private boolean createPortalUsers(List<MyUser> myUsers,long managerRoleId,long ghsiRoleId,long executiveRoleId,long hrRoleId){
 		  try{
