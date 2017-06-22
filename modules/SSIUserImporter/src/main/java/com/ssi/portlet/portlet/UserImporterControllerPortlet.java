@@ -61,9 +61,8 @@ import org.osgi.service.component.annotations.Component;
 	service = Portlet.class
 )
 public class UserImporterControllerPortlet extends MVCPortlet {
-	
-	final int NUMBER_OF_COLUMN = 3;
-	final String EMP_XLS= "EMP.xls";
+
+	final static String empXls = "EMP.xls";
 	private static Log logger = LogFactoryUtil.getLog(UserImporterControllerPortlet.class);
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
@@ -179,7 +178,7 @@ public class UserImporterControllerPortlet extends MVCPortlet {
     		   	}
     		   	
     		 	if(isComplete){
-    		 		uploadFileInDocumentAndLibrary(themeDisplay, new File(EMP_XLS));
+    		 		uploadFileInDocumentAndLibrary(themeDisplay, new File(empXls));
     		 	}
     		 	else{
     		   		logger.info("Error while uploading document in documents and library");
@@ -258,13 +257,13 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 				}
 			}
 			try {
-				File empFile1 = new File(EMP_XLS);
+				File empFile1 = new File(empXls);
 				if(empFile1!=null && empFile1.exists()) { 
 				    boolean deleted = empFile1.delete();
 				    logger.info("File Deleted :- "+deleted);
 				    
 				}
-				File empFile = new File(EMP_XLS);
+				File empFile = new File(empXls);
 				FileOutputStream out = new FileOutputStream(empFile);
 				workbook.write(out);
 				logger.info("Excel written successfully.."+empFile.getAbsolutePath());
