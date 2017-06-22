@@ -83,7 +83,7 @@ public class SSIProfilePortlet extends MVCPortlet {
             if (!file.exists()) {
             log.info("Empty File");
            }
-            else  if (file != null ) {
+            else {
                  inputStream = new ByteArrayFileInputStream(file, 1024);
                   
                   try {
