@@ -22,7 +22,7 @@ import org.osgi.service.component.annotations.ConfigurationPolicy;
 		    configurationPolicy = ConfigurationPolicy.OPTIONAL,
 		    immediate = true,
 		    property = {
-		        "javax.portlet.name=Employee_Directory_portlet_EmployeeDirectoryPortlet"
+		        "javax.portlet.name=employee_directory_portlet_EmployeeDirectoryPortlet"
 		    },
 		    service = ConfigurationAction.class
 		)
