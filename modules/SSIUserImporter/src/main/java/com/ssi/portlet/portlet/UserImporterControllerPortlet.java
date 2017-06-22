@@ -2,8 +2,6 @@ package com.ssi.portlet.portlet;
 
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
-import com.liferay.mail.kernel.model.MailMessage;
-import com.liferay.mail.kernel.service.MailServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -33,7 +31,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.mail.internet.InternetAddress;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
@@ -65,7 +62,8 @@ import org.osgi.service.component.annotations.Component;
 )
 public class UserImporterControllerPortlet extends MVCPortlet {
 	
-	final static int NUMBER_OF_COLUMN = 3;
+	final int NUMBER_OF_COLUMN = 3;
+	final String EMP_XLS= "EMP.xls";
 	private static Log logger = LogFactoryUtil.getLog(UserImporterControllerPortlet.class);
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
@@ -111,28 +109,28 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 							myUser.setEmail(cell.getStringCellValue());
 						}
 						else if(i%8==4){
-							if(cell.getStringCellValue()!=null&&!cell.getStringCellValue().trim().isEmpty()&&cell.getStringCellValue().trim().equalsIgnoreCase("Yes")){
+							if(cell.getStringCellValue()!=null&&!cell.getStringCellValue().trim().isEmpty()&&"Yes".equalsIgnoreCase(cell.getStringCellValue().trim())){
 								myUser.setManager(true);
 							}
 						}
 						else if(i%8==5){
-							if(cell.getStringCellValue()!=null&&!cell.getStringCellValue().trim().isEmpty()&&cell.getStringCellValue().trim().equalsIgnoreCase("Yes")){
+							if(cell.getStringCellValue()!=null&&!cell.getStringCellValue().trim().isEmpty()&&"Yes".equalsIgnoreCase(cell.getStringCellValue().trim())){
 								myUser.setGHSI(true);
 							}
 						}
 						else if(i%8==6){
-							if(cell.getStringCellValue()!=null&&!cell.getStringCellValue().trim().isEmpty()&&cell.getStringCellValue().trim().equalsIgnoreCase("Yes")){
+							if(cell.getStringCellValue()!=null&&!cell.getStringCellValue().trim().isEmpty()&&"Yes".equalsIgnoreCase(cell.getStringCellValue().trim())){
 								myUser.setExecutive(true);
 							}
 						}
 						else if(i%8==7){
-							if(cell.getStringCellValue()!=null&&!cell.getStringCellValue().trim().isEmpty()&&cell.getStringCellValue().trim().equalsIgnoreCase("Yes")){
+							if(cell.getStringCellValue()!=null&&!cell.getStringCellValue().trim().isEmpty()&&"Yes".equalsIgnoreCase(cell.getStringCellValue().trim())){
 								myUser.setHR(true);
 							}
 						}
 						i++;
 					}
-					if(myUser!=null && !myUser.getEmail().trim().equals("Work Email")){
+					if(myUser!=null && !"Work Email".equals(myUser.getEmail())){
 						logger.info("Email Setting :-"+myUser.getEmail());
 						myUser.setUserId(themeDisplay.getUserId());
 						String screenname =  myUser.getEmail().trim().split("@")[0];
@@ -157,16 +155,16 @@ public class UserImporterControllerPortlet extends MVCPortlet {
     		   long hrRoleId = 0;
     		   
     		   for(Role role : roles){
-    			   if(role.getName().equals("Manager")){
+    			   if("Manager".equals(role.getName())){
     				   managerRoleId = role.getRoleId();
     			   }
-    			   if(role.getName().equals("GHSI")){
+    			   if("GHSI".equals(role.getName())){
     				   ghsiRoleId = role.getRoleId();
     			   }
-    			   if(role.getName().equals("Executive")){
+    			   if("Executive".equals(role.getName())){
     				   executiveRoleId = role.getRoleId();
     			   }
-    			   if(role.getName().equals("HR")){
+    			   if("HR".equals(role.getName())){
     				   hrRoleId = role.getRoleId();
     			   }
     		   }
@@ -181,7 +179,7 @@ public class UserImporterControllerPortlet extends MVCPortlet {
     		   	}
     		   	
     		 	if(isComplete){
-    		 		uploadFileInDocumentAndLibrary(themeDisplay, new File("EMP.xls"));
+    		 		uploadFileInDocumentAndLibrary(themeDisplay, new File(EMP_XLS));
     		 	}
     		 	else{
     		   		logger.info("Error while uploading document in documents and library");
@@ -260,11 +258,13 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 				}
 			}
 			try {
-				File empFile1 = new File("EMP.xls");
+				File empFile1 = new File(EMP_XLS);
 				if(empFile1!=null && empFile1.exists()) { 
-				    empFile1.delete();
+				    boolean deleted = empFile1.delete();
+				    logger.info("File Deleted :- "+deleted);
+				    
 				}
-				File empFile = new File("EMP.xls");
+				File empFile = new File(EMP_XLS);
 				FileOutputStream out = new FileOutputStream(empFile);
 				workbook.write(out);
 				logger.info("Excel written successfully.."+empFile.getAbsolutePath());
@@ -280,7 +280,7 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 	 boolean uploadFileInDocumentAndLibrary(ThemeDisplay themeDisplay,File file){
 		 long repositoryId = themeDisplay.getScopeGroupId();
 		 try {
-			FileEntry fileEntry = DLAppLocalServiceUtil.addFileEntry(themeDisplay.getUserId(), repositoryId,  DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, "SSI Users"+new Date()+".xls", "application/vnd.ms-excel",  "SSI Users "+new Date(),
+			DLAppLocalServiceUtil.addFileEntry(themeDisplay.getUserId(), repositoryId,  DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, "SSI Users"+new Date()+".xls", "application/vnd.ms-excel",  "SSI Users "+new Date(),
 					 "SSI Users",  "SSI Users", file, new ServiceContext());
 		} catch (Exception e) {
 			logger.error("Error while uploading excel file in document and library "+e);

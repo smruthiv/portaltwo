@@ -61,7 +61,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 	public void processAction(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException {
 			byte[] data = null;
-			boolean	updatePassword = true;
+			boolean	updatePassword;
 			updatePassword = validatePassword(actionRequest, actionResponse);
 			if(updatePassword){
 		try {
@@ -83,7 +83,7 @@ public class SSIProfilePortlet extends MVCPortlet {
             if (!file.exists()) {
             log.info("Empty File");
            }
-          if ((file != null) && file.exists()) {
+            else  if (file != null ) {
                  inputStream = new ByteArrayFileInputStream(file, 1024);
                   
                   try {
@@ -149,7 +149,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 				UserServiceUtil.updatePortrait(user.getUserId(), data);
 			}
 		} catch (PortalException e) {
-			e.printStackTrace();
+			log.error("Error while uploading profile "+e);
 		}
 		log.info("Profile saved succesfully");
 		updatePassword(actionRequest,actionResponse);
