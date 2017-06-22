@@ -93,7 +93,7 @@ for(DLFolder folder : folderList){
 				</div>
 				<div class = "iconFrame">
 					 <aui:a href="<%= Gallery %>">
-						<img src="<%=url%>" id="<%=eventFolder.getFolderId()%>" name="test" title = "testte">
+						<img src="<%=url%>" id="<%=eventFolder.getFolderId()%>" name="test" title = "<%=eventFolder.getName()%>">
 						<div class="galleryName"><%=eventFolder.getName()%></div>
 					 </aui:a>
 				</div> 

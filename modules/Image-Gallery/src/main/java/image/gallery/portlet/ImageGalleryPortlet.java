@@ -63,6 +63,7 @@ public class ImageGalleryPortlet extends MVCPortlet {
 	
 	public static void createDocument(ActionRequest req,ActionResponse res){
 		try{
+		logger.info("Image Gallery props :-"+IMAGE_GALLERY);
 		ThemeDisplay themedisplay = (ThemeDisplay) req.getAttribute(WebKeys.THEME_DISPLAY);
 		long groupId = themedisplay.getScopeGroupId();
 		long userId = themedisplay.getUserId();
@@ -71,6 +72,7 @@ public class ImageGalleryPortlet extends MVCPortlet {
 		String eventFolderDesc = ParamUtil.getString(req, "folderDesc");
 		for(DLFolder folder : folderList){
 			if(IMAGE_GALLERY.equalsIgnoreCase(folder.getName())){
+			logger.info("Found folder :-"+IMAGE_GALLERY);
 			long folderId = folder.getFolderId();
 			Folder dlforler =  DLAppLocalServiceUtil.addFolder(userId, themedisplay.getScopeGroupId(), folderId, eventFolderName, eventFolderDesc, new ServiceContext());
         	Role role = RoleLocalServiceUtil.getRole(dlforler.getCompanyId(), SITE_MEMEBER);
