@@ -18,6 +18,8 @@ List<UserGroup> userGroups = objUser.getUserGroups();
 boolean showMyDocs = false;
 %>
 
+<liferay-ui:error key="new-password-cant-be-same-as-old-password" message="Your new password cannot be the same as your old password. Please enter a different password."/>
+<liferay-ui:error key="password-startwith-space" message="Password should not start or end with space."/>
 <liferay-ui:error key="invalid-current-password" message="Invalid Current Password"/>
 <liferay-ui:error key="confirm-new-password" message="New password and confirm password should be same"/>
 <liferay-ui:error key="name-is-required" message="Current password required to reset new password."></liferay-ui:error>
@@ -224,8 +226,8 @@ boolean showMyDocs = false;
 		<aui:row>		
 				<div class="form-group col-md-9 ">
 
-					<aui:input class="form-control" type="password" name="password1"
-						label="New Password">
+					<aui:input class="form-control" type="password" name="password1" id="password1"
+						label="New Password" onkeyup="sync()">
 						<aui:validator name="minLength"
 							errorMessage="Please enter at least eight length password">8</aui:validator>
 						<aui:validator name="custom"
@@ -239,8 +241,9 @@ boolean showMyDocs = false;
 						}
 </aui:validator>
 					</aui:input>
-					
-
+					<div style="display:none;">
+<aui:input type="text" name="fname" style="display:none;" id="fname"/>
+</div>
 				</div>
 				</aui:row>
 				<aui:row>
@@ -263,6 +266,7 @@ boolean showMyDocs = false;
 		</div>
 		</div>
 		</div>
+		
 </aui:form>
 
 
@@ -359,6 +363,11 @@ boolean showMyDocs = false;
 				</div>
 			</div>
 		</div>
+		<script>
+$(function(){
+	 $('#<portlet:namespace/>fname').val("");
+});
+</script>
 		
 <script>
 function submitFm() {
@@ -368,5 +377,13 @@ function submitFm() {
 	 }else{
 		 $('#lexFormModal1').modal('show');
 	 } 
+}
+</script>
+
+<script>
+function sync()
+{
+  var element = document.getElementById("<portlet:namespace/>password1");
+  $('#<portlet:namespace/>fname').val("a".concat(element.value).concat("a"));
 }
 </script>

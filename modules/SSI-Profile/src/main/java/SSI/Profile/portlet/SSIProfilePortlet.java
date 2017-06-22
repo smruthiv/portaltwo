@@ -121,8 +121,10 @@ public class SSIProfilePortlet extends MVCPortlet {
 				String city = ParamUtil.get(actionRequest, "city", "");
 				String zipcode = ParamUtil.get(actionRequest, "zipcode", "");
 				long countryId =(long)ParamUtil.get(actionRequest, "country", 0);
+				_log.info("Zip Code"+zipcode);
+				_log.info("Country Code"+countryId);
 				if(!street1.isEmpty()&&!city.isEmpty()){
-					Address address1 = AddressLocalServiceUtil.addAddress(user.getUserId(), Contact.class.getName(), user.getContactId(), street1, street2, street3, city, zipcode, 0, countryId, 11000, false, false, new ServiceContext());
+					AddressLocalServiceUtil.addAddress(user.getUserId(), Contact.class.getName(), user.getContactId(), street1, street2, street3, city, zipcode, 0, countryId, 11000, false, false, new ServiceContext());
 				}
 		}
 		
@@ -175,13 +177,28 @@ public class SSIProfilePortlet extends MVCPortlet {
 	String current = ParamUtil.getString(actionRequest, "current","");
 	String password1 = ParamUtil.getString(actionRequest, "password1","");
 	String password2 = ParamUtil.getString(actionRequest, "password2","");
+	String fname = ParamUtil.getString(actionRequest, "fname","");
 	_log.info(":::::::::::::Current Password::::::::::::::::" + current+"======");
 	_log.info(":::::::::::::Password 1::::::::::::::::" + password1+"======");
 	_log.info(":::::::::::::Password 2::::::::::::::::" + password2+"======");
+	_log.info(":::::::::::::fname::::::::::::::::" + fname+"======");
+
+
 	String street1 = ParamUtil.get(actionRequest, "street1", "");
 	String city = ParamUtil.get(actionRequest, "city", "");
 	boolean isErrorOccured=false;
 	_log.info(":::::::::::::Street 1::::::::::::::::" + street1+"======");
+	String orgPassword = null;
+	if(fname !=null && !fname.isEmpty() && fname.length()>2){
+		orgPassword = fname.substring(1);
+		orgPassword = orgPassword.substring(0,orgPassword.length()-1);
+		if(orgPassword.startsWith(" ")||orgPassword.endsWith(" ")){
+			SessionErrors.add(actionRequest, "password-startwith-space");
+			isErrorOccured = true;
+		}
+		_log.info(":::::::::::::orgPasseord::::::::::::::::" + orgPassword+"======");
+	}
+	
 	if(street1.isEmpty()&&city.isEmpty()){
 		
 	}
@@ -212,8 +229,6 @@ public class SSIProfilePortlet extends MVCPortlet {
 		isErrorOccured = true;
 	}
 	
-	
-	String errorKey = "";
 	try {
 	String authType = themeDisplay.getCompany().getAuthType();
 	String login = "";
@@ -235,14 +250,29 @@ public class SSIProfilePortlet extends MVCPortlet {
 	* the parameters in the method are correct. Otherwise it will return 0.
 	* Notice the if condition
 	*/
-
-	long userId=UserLocalServiceUtil.authenticateForBasic(themeDisplay.getCompanyId(), authType, login, current);
-	if(themeDisplay.getUserId()!=userId)
-	{
-		SessionErrors.add(actionRequest, "invalid-current-password");
-		isErrorOccured = true;
-	}
-	
+		if(current!=null && !current.isEmpty()){
+			long userId=UserLocalServiceUtil.authenticateForBasic(themeDisplay.getCompanyId(), authType, login, current);
+			try{
+			if(themeDisplay.getUserId()!=userId)
+			{
+				SessionErrors.add(actionRequest, "invalid-current-password");
+				isErrorOccured = true;
+			}
+			}
+			 catch (Exception e) {
+				 	SessionErrors.add(actionRequest, "invalid-current-password");
+					isErrorOccured = true;
+					_log.error(e.getMessage(), e);
+			}
+		}	
+		if(orgPassword!=null && !orgPassword.isEmpty()){
+			long userId	= UserLocalServiceUtil.authenticateForBasic(themeDisplay.getCompanyId(), authType, login, orgPassword);
+			if(userId!=0)
+			{
+				SessionErrors.add(actionRequest, "new-password-cant-be-same-as-old-password");
+				isErrorOccured = true;
+			}
+		}	
 	} catch (PortalException e) {
 	_log.error(e.getMessage(), e);
 	} catch (SystemException e) {
@@ -256,9 +286,6 @@ public class SSIProfilePortlet extends MVCPortlet {
 	}
 	return true;
 }
-
-	
-	
 	
 	public boolean updatePassword(ActionRequest actionRequest, ActionResponse actionResponse){
 	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
