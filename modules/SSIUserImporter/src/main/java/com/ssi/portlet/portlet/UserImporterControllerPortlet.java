@@ -7,25 +7,21 @@ import com.liferay.mail.kernel.service.MailServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.PasswordPolicy;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.repository.model.FileEntry;
-import com.liferay.portal.kernel.service.PasswordPolicyLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PwdGenerator;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,8 +46,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.osgi.service.component.annotations.Component;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
 /**
  * @author Tushar.Patel
  */
@@ -70,7 +65,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 )
 public class UserImporterControllerPortlet extends MVCPortlet {
 	
-	final static int numberOfColumn = 3;
+	final static int NUMBER_OF_COLUMN = 3;
 	private static Log logger = LogFactoryUtil.getLog(UserImporterControllerPortlet.class);
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
@@ -84,7 +79,7 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 	   ThemeDisplay themeDisplay = (ThemeDisplay) arq.getAttribute(WebKeys.THEME_DISPLAY);	
 	   UploadPortletRequest uploadPortletRequest=PortalUtil.getUploadPortletRequest(arq);
        File excelFile=(File) uploadPortletRequest.getFile("file");
-       List<MyUser> users = new ArrayList<MyUser>();
+       List<MyUser> users = new ArrayList<>();
        if(themeDisplay == null){
     	   logger.info("Theme display object is null");
 		}
@@ -153,7 +148,7 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 			 	
     		   	workbook.close();
     		   	file.close();
-    		   	boolean isComplete = false;
+    		   	boolean isComplete;
     		   	List<Role> roles = RoleLocalServiceUtil.getRoles(0, RoleLocalServiceUtil.getRolesCount());
     		   	
     		   long managerRoleId = 0;
@@ -179,7 +174,6 @@ public class UserImporterControllerPortlet extends MVCPortlet {
     		   	isComplete  = createPortalUsers(users, managerRoleId, ghsiRoleId, executiveRoleId, hrRoleId);
     		   	
     		   	if(isComplete){
-    		   		//sendEmail(users);
     		   		isComplete =	createXlsFileForCreatedUsersDetails(users);
     		   	}
     		   	else{
@@ -196,16 +190,13 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 			} catch (Exception e) {
 				logger.error("Error while creating user and reading files"+e);
 			} 
-	    	finally {
-	    		
-	    		
-	    	  	} 
+	    	
 		}
 }
 
 	  private boolean createPortalUsers(List<MyUser> myUsers,long managerRoleId,long ghsiRoleId,long executiveRoleId,long hrRoleId){
 		  try{
-			  User user1 = null;
+			  User user1;
 			  for (MyUser user : myUsers) {
 				user1 = UserLocalServiceUtil.addUser(user.getUserId(), user.getCompanyId(), false, user.getPassWord(),
 						user.getPassWord(), false, user.getScreenName(), user.getEmail(), 0L, "", user.getLocale(),
@@ -230,7 +221,7 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 			  }
 		  }
 		  catch(Exception e){
-			  logger.error("Portal user creation failed " + e.getMessage());
+			  logger.error("Portal user creation failed " + e);
 			  return false;
 		  }
 		  return true;
@@ -240,8 +231,7 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 		  	HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet("Created User");
 			Map<String, Object[]> data = new HashMap<String, Object[]>();
-		//	data.put(String.valueOf(1), new Object[] {"Email", "Password"});
-			for(int i=0 ; i<users.size();i++){
+		for(int i=0 ; i<users.size();i++){
 				data.put(String.valueOf(i+2), new Object[] {users.get(i).getEmail(),users.get(i).getPassWord()});
 			}
 		
@@ -299,24 +289,5 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 		 return true;
 	  }
 	 
-	/* public void sendEmail(List<MyUser> users) {
-		 
-		 for(MyUser myUser : users){
-		        try {
-		        	
-		        	String body ="Dear "+myUser.getFirstName()+" "+myUser.getLastNamne()+"\n\n"+"Please find below credentials for ssi portal.\n\n"+"Your username :- "+myUser.getScreenName()+"\n"+"Your password :- "+myUser.getPassWord()+" \n\n"+"Regards \n"+"SSI Admin";
-		        	MailMessage mailMessage=new MailMessage();
-		            mailMessage.setBody(body);
-		            mailMessage.setSubject("test");
-		            mailMessage.setFrom(new InternetAddress("ssiadmin@Trianz.com"));
-					mailMessage.setTo(new InternetAddress("tushar.patel@trianz.com"));
-					MailServiceUtil.sendEmail(mailMessage);
-					//Mail Send
-					logger.info("Mail Send Successfully********************************");
-				} 
-				catch (Exception e) {
-					logger.error("Error While sending Email*******************"+e.getMessage());
-				} 
-		 }
-		}*/
+
 }

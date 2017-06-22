@@ -30,10 +30,4 @@ import org.osgi.service.component.annotations.Component;
 	service = Portlet.class
 )
 public class UsersDocsPortlet extends MVCPortlet {
-	@Override
-	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
-			throws IOException, PortletException {
-		// TODO Auto-generated method stub
-		super.render(renderRequest, renderResponse);
-	}
 }

@@ -70,7 +70,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 			User user = UserLocalServiceUtil.getUser(userId);
 			String firstName = ParamUtil.get(actionRequest, "firstName", "");
 			String lastName = ParamUtil.get(actionRequest, "lastName", "");
-			_log.info("Last Name"+lastName);
+			log.info("Last Name"+lastName);
 			String skype = ParamUtil.get(actionRequest, "skype",  "");
 			String phoneNumber = ParamUtil.get(actionRequest, "phoneNumber", "" );
 			Contact contact = user.getContact();
@@ -78,10 +78,10 @@ public class SSIProfilePortlet extends MVCPortlet {
 			ContactLocalServiceUtil.updateContact(contact);
 			
 			UploadPortletRequest uploadPortletRequest = PortalUtil.getUploadPortletRequest(actionRequest); 
-		    ByteArrayFileInputStream inputStream = null;
+		    ByteArrayFileInputStream inputStream;
 			File file = uploadPortletRequest.getFile("userPic");
             if (!file.exists()) {
-            _log.info("Empty File");
+            log.info("Empty File");
            }
           if ((file != null) && file.exists()) {
                  inputStream = new ByteArrayFileInputStream(file, 1024);
@@ -89,13 +89,13 @@ public class SSIProfilePortlet extends MVCPortlet {
                   try {
                          data = FileUtil.getBytes(inputStream);
                     } catch (IOException e) {
-                            e.printStackTrace();
+                         log.error("Error occuer"+e);
                      }
                   
           }
 		
 		if(user.getAddresses()!=null&&user.getAddresses().size()>0&&user.getAddresses().get(0)!=null){
-			_log.info("Update Address");
+			log.info("Update Address");
 			String street1 = ParamUtil.get(actionRequest, "street1", "");
 			String street2 = ParamUtil.get(actionRequest, "street2", "");
 			String street3 = ParamUtil.get(actionRequest, "street3", "");
@@ -114,22 +114,21 @@ public class SSIProfilePortlet extends MVCPortlet {
 			AddressLocalServiceUtil.updateAddress(address);
 		}
 		else{
-				_log.info("Add Address");
+				log.info("Add Address");
 				String street1 = ParamUtil.get(actionRequest, "street1","");
 				String street2 = ParamUtil.get(actionRequest, "street2", "");
 				String street3 = ParamUtil.get(actionRequest, "street3", "");
 				String city = ParamUtil.get(actionRequest, "city", "");
 				String zipcode = ParamUtil.get(actionRequest, "zipcode", "");
 				long countryId =(long)ParamUtil.get(actionRequest, "country", 0);
-				_log.info("Zip Code"+zipcode);
-				_log.info("Country Code"+countryId);
+				log.info("Zip Code"+zipcode);
+				log.info("Country Code"+countryId);
 				if(!street1.isEmpty()&&!city.isEmpty()){
 					AddressLocalServiceUtil.addAddress(user.getUserId(), Contact.class.getName(), user.getContactId(), street1, street2, street3, city, zipcode, 0, countryId, 11000, false, false, new ServiceContext());
 				}
 		}
 		
 			if(user.getPhones()!=null&&user.getPhones().size()>0&&user.getPhones().get(0)!=null){
-				//_log.info("UPDATE PHONES");
 				Phone phone = user.getPhones().get(0);
 				phone.setNumber(phoneNumber);
 				phone.setTypeId(11011);
@@ -152,7 +151,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 		} catch (PortalException e) {
 			e.printStackTrace();
 		}
-		_log.info("Profile saved succesfully");
+		log.info("Profile saved succesfully");
 		updatePassword(actionRequest,actionResponse);
 		SessionMessages.add(actionRequest, "success");
 	}
@@ -164,30 +163,28 @@ public class SSIProfilePortlet extends MVCPortlet {
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws IOException, PortletException {
-		ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
-		User objUser = themeDisplay.getUser();
-		_log.info("Render Method called");
+		log.info("Render Method called");
 		super.render(renderRequest, renderResponse);
 	}
 	
 	
 	public boolean validatePassword(ActionRequest actionRequest, ActionResponse actionResponse){
 	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-	_log.info(":::::::::::::calling validate Password::::::::::::::::");
+	log.info(":::::::::::::calling validate Password::::::::::::::::");
 	String current = ParamUtil.getString(actionRequest, "current","");
 	String password1 = ParamUtil.getString(actionRequest, "password1","");
 	String password2 = ParamUtil.getString(actionRequest, "password2","");
 	String fname = ParamUtil.getString(actionRequest, "fname","");
-	_log.info(":::::::::::::Current Password::::::::::::::::" + current+"======");
-	_log.info(":::::::::::::Password 1::::::::::::::::" + password1+"======");
-	_log.info(":::::::::::::Password 2::::::::::::::::" + password2+"======");
-	_log.info(":::::::::::::fname::::::::::::::::" + fname+"======");
+	log.info(":::::::::::::Current Password::::::::::::::::" + current);
+	log.info(":::::::::::::Password 1::::::::::::::::" + password1);
+	log.info(":::::::::::::Password 2::::::::::::::::" + password2);
+	log.info(":::::::::::::fname::::::::::::::::" + fname);
 
 
 	String street1 = ParamUtil.get(actionRequest, "street1", "");
 	String city = ParamUtil.get(actionRequest, "city", "");
 	boolean isErrorOccured=false;
-	_log.info(":::::::::::::Street 1::::::::::::::::" + street1+"======");
+	log.info(":::::::::::::Street 1::::::::::::::::" + street1);
 	String orgPassword = null;
 	if(fname !=null && !fname.isEmpty() && fname.length()>2){
 		orgPassword = fname.substring(1);
@@ -196,11 +193,11 @@ public class SSIProfilePortlet extends MVCPortlet {
 			SessionErrors.add(actionRequest, "password-startwith-space");
 			isErrorOccured = true;
 		}
-		_log.info(":::::::::::::orgPasseord::::::::::::::::" + orgPassword+"======");
+		log.info(":::::::::::::orgPasseord::::::::::::::::" + orgPassword);
 	}
 	
 	if(street1.isEmpty()&&city.isEmpty()){
-		
+		log.info("Street 1 and city empty");
 	}
 	else if(street1.isEmpty()&&!city.isEmpty()){
 		SessionErrors.add(actionRequest, "street1-required");
@@ -211,15 +208,15 @@ public class SSIProfilePortlet extends MVCPortlet {
 		isErrorOccured = true;
 	}
 	if(current!=null&&current.isEmpty()&&password1!=null&&password1.isEmpty()&&password2!=null&&password2.isEmpty()){
-		_log.info("All Password is empty");
+		log.info("All Password is empty");
 		
 	}
 	else if(password1!=null&&password1.isEmpty()&&password2!=null&&password2.isEmpty()){
-		_log.info("Password 1 and 2 is empty");
+		log.info("Password 1 and 2 is empty");
 		
 	}
 	else{
-	if(current!=null&&current.isEmpty()&&!password1.isEmpty()&&!password2.isEmpty()){
+	if(current!=null&&current.isEmpty()&&password1!=null && password2!=null&&!password1.isEmpty()&&!password2.isEmpty()){
 		SessionErrors.add(actionRequest, "name-is-required");
 		isErrorOccured = true;
 	}
@@ -262,7 +259,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 			 catch (Exception e) {
 				 	SessionErrors.add(actionRequest, "invalid-current-password");
 					isErrorOccured = true;
-					_log.error(e.getMessage(), e);
+					log.error(e.getMessage(), e);
 			}
 		}	
 		if(orgPassword!=null && !orgPassword.isEmpty()){
@@ -273,12 +270,8 @@ public class SSIProfilePortlet extends MVCPortlet {
 				isErrorOccured = true;
 			}
 		}	
-	} catch (PortalException e) {
-	_log.error(e.getMessage(), e);
-	} catch (SystemException e) {
-	_log.error(e.getMessage(), e);
-	} catch (Exception e) {
-	_log.error(e.getMessage(), e);
+	}catch (Exception e) {
+	log.error(e.getMessage(), e);
 	}
 	}
 	if(isErrorOccured){
@@ -289,23 +282,23 @@ public class SSIProfilePortlet extends MVCPortlet {
 	
 	public boolean updatePassword(ActionRequest actionRequest, ActionResponse actionResponse){
 	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-	_log.info(":::::::::::::calling updatePassword::::::::::::::::");
+	log.info(":::::::::::::calling updatePassword::::::::::::::::");
 	String current = ParamUtil.getString(actionRequest, "current","");
 	String password1 = ParamUtil.getString(actionRequest, "password1","");
 	String password2 = ParamUtil.getString(actionRequest, "password2","");
 	if(current!=null&&current.isEmpty()&&password1!=null&&password1.isEmpty()&&password2!=null&&password2.isEmpty()){
-		_log.info("All Password is empty");
+		log.info("All Password is empty");
 		return true;
 	}
 	if(password1!=null&&password1.isEmpty()&&password2!=null&&password2.isEmpty()){
-		_log.info("Password 1 and 2 is empty");
+		log.info("Password 1 and 2 is empty");
 		return true;
 	}
 	
-	if(current!=null&&current.isEmpty()&&!password1.isEmpty()&&!password2.isEmpty()){
+	if(current!=null&&current.isEmpty()&&password1!=null && password2!=null && !password1.isEmpty()&&!password2.isEmpty()){
 		return false;
 	}
-	if(!password1.equals(password2))
+	if(password1!=null && password2!=null && !password1.equals(password2))
 	{
 		return false;
 	}
@@ -341,12 +334,8 @@ public class SSIProfilePortlet extends MVCPortlet {
 	}
 	UserLocalServiceUtil.updatePassword(userId, password1, password2, false);
 
-	} catch (PortalException e) {
-	_log.error(e.getMessage(), e);
-	} catch (SystemException e) {
-	_log.error(e.getMessage(), e);
-	} catch (Exception e) {
-	_log.error(e.getMessage(), e);
+	}catch (Exception e) {
+	log.error(e.getMessage(), e);
 	}
 
 	if(Validator.isNull(errorKey)){
@@ -357,7 +346,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 	return true;
 	}
 	
-	private Log _log = LogFactoryUtil.getLog(SSIProfilePortlet.class.getName());
+	private Log log = LogFactoryUtil.getLog(SSIProfilePortlet.class.getName());
 }
 
 
