@@ -14,7 +14,18 @@
  */
 --%>
 <%@page import="com.liferay.portal.kernel.util.PortalUtil"%>
+<%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
+
 <%@ include file="/init.jsp" %>
+<%
+int noOfErrors = SessionErrors.size(renderRequest);
+if(noOfErrors>0){
+%>
+<script>
+	 $('#<portlet:namespace/>loginusername').val("");
+	 $('#<portlet:namespace/>loginpassword').val("");
+</script>
+<%}%>
 <%String emailImageURL = themeDisplay.getPathThemeImages() + "/icons/user_email.png";%>
 <%String passwordImageURL = themeDisplay.getPathThemeImages() + "/icons/password.png";%>
 <%String headerImageURL = themeDisplay.getPathThemeImages() + "/sign_in_header.PNG";%>
@@ -156,11 +167,11 @@ display:block !important;
 				}
 				%>
 
-			<aui:input autoFocus="<%= windowState.equals(LiferayWindowState.EXCLUSIVE) || windowState.equals(WindowState.MAXIMIZED) %>"  name="login" showRequiredLabel="<%= false %>" type="text" value="<%= login %>"  placeholder="Email Address" label=" ">
+			<aui:input id="loginusername" autoFocus="<%= windowState.equals(LiferayWindowState.EXCLUSIVE) || windowState.equals(WindowState.MAXIMIZED) %>"  name="login" showRequiredLabel="<%= false %>" type="text" value="<%= login %>"  placeholder="Email Address" label=" ">
 					<aui:validator name="required" errorMessage="Please enter Email Address"/>
 				</aui:input>
 
-				<aui:input name="password" showRequiredLabel="<%= false %>" type="password" value="<%= password %>" placeholder="Password" label="">
+				<aui:input id="loginpassword" name="password" showRequiredLabel="<%= false %>" type="password" value="<%= password %>" placeholder="Password" label="">
 					<aui:validator name="required" errorMessage="Please enter Password"/>
 				</aui:input>
 
