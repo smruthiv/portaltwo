@@ -8,7 +8,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
-import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
@@ -62,7 +61,8 @@ import org.osgi.service.component.annotations.Component;
 )
 public class UserImporterControllerPortlet extends MVCPortlet {
 
-	final static String empXls = "EMP.xls";
+	private static final String empXls = "EMP.xls";
+	private static final String ssiUsers = "SSI Users";
 	private static Log logger = LogFactoryUtil.getLog(UserImporterControllerPortlet.class);
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
@@ -227,7 +227,7 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 	  boolean createXlsFileForCreatedUsersDetails(List<MyUser> users){
 		  	HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet("Created User");
-			Map<String, Object[]> data = new HashMap<String, Object[]>();
+			Map<String, Object[]> data = new HashMap<>();
 		for(int i=0 ; i<users.size();i++){
 				data.put(String.valueOf(i+2), new Object[] {users.get(i).getEmail(),users.get(i).getPassWord()});
 			}
@@ -261,7 +261,6 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 				if(empFile1!=null && empFile1.exists()) { 
 				    boolean deleted = empFile1.delete();
 				    logger.info("File Deleted :- "+deleted);
-				    
 				}
 				File empFile = new File(empXls);
 				FileOutputStream out = new FileOutputStream(empFile);
@@ -279,8 +278,8 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 	 boolean uploadFileInDocumentAndLibrary(ThemeDisplay themeDisplay,File file){
 		 long repositoryId = themeDisplay.getScopeGroupId();
 		 try {
-			DLAppLocalServiceUtil.addFileEntry(themeDisplay.getUserId(), repositoryId,  DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, "SSI Users"+new Date()+".xls", "application/vnd.ms-excel",  "SSI Users "+new Date(),
-					 "SSI Users",  "SSI Users", file, new ServiceContext());
+			DLAppLocalServiceUtil.addFileEntry(themeDisplay.getUserId(), repositoryId,  DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, ssiUsers+new Date()+".xls", "application/vnd.ms-excel",  ssiUsers+new Date(),
+					ssiUsers,  ssiUsers, file, new ServiceContext());
 		} catch (Exception e) {
 			logger.error("Error while uploading excel file in document and library "+e);
 			return false;
