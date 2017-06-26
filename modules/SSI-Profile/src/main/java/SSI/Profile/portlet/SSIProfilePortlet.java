@@ -1,7 +1,6 @@
 package SSI.Profile.portlet;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.io.ByteArrayFileInputStream;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -56,7 +55,7 @@ import org.osgi.service.component.annotations.Component;
 	service = Portlet.class
 )
 public class SSIProfilePortlet extends MVCPortlet {
-	
+	private Log log = LogFactoryUtil.getLog(SSIProfilePortlet.class.getName());
 	@Override
 	public void processAction(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException {
@@ -127,7 +126,6 @@ public class SSIProfilePortlet extends MVCPortlet {
 					AddressLocalServiceUtil.addAddress(user.getUserId(), Contact.class.getName(), user.getContactId(), street1, street2, street3, city, zipcode, 0, countryId, 11000, false, false, new ServiceContext());
 				}
 		}
-		
 			if(user.getPhones()!=null&&user.getPhones().size()>0&&user.getPhones().get(0)!=null){
 				Phone phone = user.getPhones().get(0);
 				phone.setNumber(phoneNumber);
@@ -254,6 +252,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 			{
 				SessionErrors.add(actionRequest, "invalid-current-password");
 				isErrorOccured = true;
+				
 			}
 			}
 			 catch (Exception e) {
@@ -346,7 +345,6 @@ public class SSIProfilePortlet extends MVCPortlet {
 	return true;
 	}
 	
-	private Log log = LogFactoryUtil.getLog(SSIProfilePortlet.class.getName());
 }
 
 
