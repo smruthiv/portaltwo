@@ -22,6 +22,7 @@ if (Validator.isNull(authType)) {
 	authType = company.getAuthType();
 }
 
+
 Integer reminderAttempts = (Integer)portletSession.getAttribute(WebKeys.FORGOT_PASSWORD_REMINDER_ATTEMPTS);
 
 if (reminderAttempts == null) {
