@@ -1,6 +1,7 @@
 package image.gallery.portlet;
 
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
+import com.liferay.document.library.kernel.exception.DuplicateFolderNameException;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
@@ -19,6 +20,7 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.upload.FileItem;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
@@ -62,6 +64,7 @@ public class ImageGalleryPortlet extends MVCPortlet {
 	
 	
 	public static void createDocument(ActionRequest req,ActionResponse res){
+		boolean errorWhileCreatingFolder = false;
 		try{
 		logger.info("Image Gallery props :-"+IMAGE_GALLERY);
 		ThemeDisplay themedisplay = (ThemeDisplay) req.getAttribute(WebKeys.THEME_DISPLAY);
@@ -74,15 +77,39 @@ public class ImageGalleryPortlet extends MVCPortlet {
 			if(IMAGE_GALLERY.equalsIgnoreCase(folder.getName())){
 			logger.info("Found folder :-"+IMAGE_GALLERY);
 			long folderId = folder.getFolderId();
-			Folder dlforler =  DLAppLocalServiceUtil.addFolder(userId, themedisplay.getScopeGroupId(), folderId, eventFolderName, eventFolderDesc, new ServiceContext());
-        	Role role = RoleLocalServiceUtil.getRole(dlforler.getCompanyId(), SITE_MEMEBER);
+			Folder dlforler = null;
+			try{
+			dlforler =  DLAppLocalServiceUtil.addFolder(userId, themedisplay.getScopeGroupId(), folderId, eventFolderName, eventFolderDesc, new ServiceContext());
+			}
+			catch(DuplicateFolderNameException exception){
+				res.setRenderParameter("mvcPath", "/html/jsps/addImages.jsp");
+				SessionErrors.add(req, "duplicate-folder-name");
+				logger.error(exception);
+				errorWhileCreatingFolder = true;
+				
+			}
+			catch (Exception e) {
+				res.setRenderParameter("mvcPath", "/html/jsps/addImages.jsp");
+				SessionErrors.add(req, "duplicate-folder-name");
+				logger.error(e);
+				errorWhileCreatingFolder = true;
+			}
+			if(!errorWhileCreatingFolder){
+			Role role = RoleLocalServiceUtil.getRole(dlforler.getCompanyId(), SITE_MEMEBER);
         	ResourcePermissionLocalServiceUtil.setResourcePermissions(themedisplay.getCompanyId(), DLFolder.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, String.valueOf(dlforler.getFolderId()), role.getRoleId(), new String[]{"VIEW"});
 			res.setRenderParameter("newFolderId", dlforler.getFolderId()+"");
 			res.setRenderParameter("newFolderName", eventFolderName+"");
 			}
+			}
+			if(!errorWhileCreatingFolder){
 			res.setRenderParameter("mvcPath", "/html/jsps/addImages.jsp");
+			}
+			else{
+				res.setRenderParameter("mvcPath", "/html/jsps/addImages.jsp");
+			}
 		}
 		}
+		
 		catch(Exception exception){
 			logger.error(exception);
 		}
