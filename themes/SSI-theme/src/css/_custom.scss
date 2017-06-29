@@ -180,7 +180,7 @@ width: 100%;
 .navbar-toggle {
 
     position: absolute;
-    left: 91%;
+    right: 2%;
 }
 .navbar-toggle .icon-bar {
     background-color: #ffbd43;
@@ -253,6 +253,11 @@ box-shadow:none;
     border-bottom-width: 0;
     margin-top: 2px;
 }
+}
+.navbar-toggle {
+    position: absolute;
+    right: 2% !important;
+    left: inherit !important;
 }
 /****************************************************Search Box Styling*******************************/
 #banner .navbar-form input {
@@ -471,6 +476,7 @@ display:none;
 }
 .signed-in .policy{
 display:none;}
+
 .signed-out .policy{
 display:none;
   bottom: 0;
@@ -615,11 +621,18 @@ padding:0 !important;}
    #portlet_com_liferay_login_web_portlet_LoginPortlet{
     background:#fff;
     margin: 0 auto;
-    width: 420px;
-    margin-bottom: 20px;
-	top:40px;
+    width: 30em;
    
 }
+#signIn_header img {
+    width: 30em;
+}
+
+#signIn .button-holder {
+    margin: 14px 0;
+}
+
+
 .navigation{
 text-align:center;
 padding:0 0 1em 0;
@@ -635,8 +648,19 @@ padding:0 0 1em 0;
 #signInfooter{
 text-align:center;
     font-size: 0.9em;
+	background:#fff;
 	}
-
+	
+	#signIn {
+    position: absolute;
+    top: 0em;
+	z-index:200;
+}
+#signIn .navigation {
+    text-align: center;
+    padding: 0 0 1em 0;
+    background: #fff;
+}
 #portlet_com_liferay_login_web_portlet_LoginPortlet Modal{
 text-align:justify;
 font-size:13px;
@@ -679,9 +703,7 @@ margin-top:1em;
     border-radius: 3px;
 }
 #portlet_com_liferay_login_web_portlet_LoginPortlet  form {
-    padding:2em 2em 0em 2em;
-	z-index:200;
-	position:relative;
+    padding:1.5em 2em 0 2em;
 }
 #portlet_com_liferay_login_web_portlet_LoginPortlet  form img {
     float: left;
@@ -828,11 +850,19 @@ margin:0;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+	color:#fff;
 }
 
 .carousel-caption a {
     color: #fff;
     font-size: 1.2em;
+	
+}
+.carousel-caption a p{
+ text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+	color:#fff;
 }
 
 @media screen and (min-width: 768px){
@@ -1014,8 +1044,11 @@ font-weight:normal !important;
     font-size: 15px;
     color: #e3976b;
     float: left;
-    margin: 0 0 0 1em;
+    margin:0;
     text-align: center;
+	 position: absolute;
+    z-index: 2;
+    left: 1em;
     margin-bottom: 7px;
 }
 
@@ -1025,9 +1058,10 @@ font-weight:normal !important;
     height: 19px!important;
     background: #f7f7f7 !important;
     margin-top: 4px !important;
-    padding: 0 !important;
+    padding: 0 0 0 1.1em!important;
     overflow: hidden !important;
     float: left !important;
+	
 }
 /*****************Quick Links*******************************/
 #quickLinks{
@@ -1113,7 +1147,7 @@ background-color:#db7a02 !important;
 .homeTabs .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
     background: #983720;
     border: none;
-    padding: 10px;
+    padding: 10px 3px 10px 3px;
     color: #fff;
     text-transform:uppercase;
 	font-weight: bold;
@@ -1121,6 +1155,7 @@ background-color:#db7a02 !important;
 .homeTabs .nav-tabs>li>a{
 color:#fff;
 text-transform:uppercase;
+ padding: 10px 6px 10px 6px !important;
 }
 
 .homeTabs .nav-tabs {
