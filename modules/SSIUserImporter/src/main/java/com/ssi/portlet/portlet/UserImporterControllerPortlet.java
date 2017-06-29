@@ -1,5 +1,6 @@
 package com.ssi.portlet.portlet;
 
+import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
