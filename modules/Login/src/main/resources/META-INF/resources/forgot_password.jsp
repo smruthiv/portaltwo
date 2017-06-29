@@ -29,7 +29,6 @@ if (reminderAttempts == null) {
 	reminderAttempts = 0;
 }
 %>
-
 <portlet:actionURL name="/login/forgot_password" var="forgotPasswordURL">
 	<portlet:param name="mvcRenderCommandName" value="/login/forgot_password" />
 </portlet:actionURL>
