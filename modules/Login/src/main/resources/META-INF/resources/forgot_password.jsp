@@ -52,7 +52,7 @@ if (reminderAttempts == null) {
 		UserLockoutException.PasswordPolicyLockout ule = (UserLockoutException.PasswordPolicyLockout)errorException;
 		%>
 
-		<liferay-ui:message arguments="<%= ule.user.getUnlockDate() %>" key="this-account-is-locked" translateArguments="<%= false %>" />
+		<liferay-ui:message arguments="<%= ule.user.getUnlockDate() %>" key="Your Account is Locked. Please Email to portaladmin@ssisolutions.biz to Get Your Account Unlocked. " translateArguments="<%= false %>" />
 	</liferay-ui:error>
 
 	<liferay-ui:error exception="<%= UserReminderQueryException.class %>" message="your-answer-does-not-match-what-is-in-our-database" />

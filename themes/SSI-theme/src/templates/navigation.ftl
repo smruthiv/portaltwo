@@ -10,7 +10,7 @@
 			<li><a href="#" onclick="toggleUserMenu();return false;">
 			<span class="user-avatar-image">
 					
-													<img class =" aspect-ratio-bg-cover user-icon" src ="${user_avatar_url}" alt="user avatar"/>
+													<img class =" aspect-ratio-bg-cover user-icon" src ="${user_avatar_url}" alt="user avatar" title="${user_name}"/>
 												
 				</span>
 				<span class="user-full-name">
@@ -20,13 +20,13 @@
 								</a>
 			<ul class="userDropdown">
 			<li><a href="/group/ssi/profile"><img src="${images_folder}/icons/drop_user_profile.svg" />My Profile</a><li>
-			<li><a href="/user/${user_screen_name}/~/51801/home"><img src="${images_folder}/icons/drop_my_doc.svg" />My Documents</a></li>
+			
 			
 			
 			
 			
 			<#if is_signed_in && permissionChecker.isOmniadmin()>
-<li><a href="/group/ssi/user-docs"><img src="${images_folder}/icons/drop_user_doc.svg" /> Users Documents</a></li>
+
 <li><a href="#" onclick="toggleDockbar();return false;" title="Settings"><img src="${images_folder}/icons/drop_settings.svg" />Settings</a></li>
 </#if>
 

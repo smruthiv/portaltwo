@@ -1039,7 +1039,6 @@ height: 22em;
     display: inline-table;
     width: 30%;
     padding:1em 0 1em 0;
-    float: left;
     text-align: center;
 }
 .linksIcon a{
@@ -1259,15 +1258,22 @@ background: url(../images/icons/bullet.png) no-repeat left top;
 
 /***********************************HR Forms Styling******************************************************/
 .ssiForms img {
-    height: 64px;
-    width: 64px;
-    margin: 0em 1em 0em 1em;
+    height: 5em !important;
+    width: 5em !important;
+    margin: 0 1em 0 1em;
 }
 
 .ssiForms .link {
     color: #983720;
     font-size: 15px;
     margin: 0;
+    display: -webkit-box;
+    margin: 0 auto;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 2.7em;
 }
 
 .ssiForms .download a {
@@ -1276,7 +1282,8 @@ background: url(../images/icons/bullet.png) no-repeat left top;
    
 }
 .ssiForms{
-margin-top:1em;}
+margin-top:1em;
+width:20em !important;}
 
 
 
