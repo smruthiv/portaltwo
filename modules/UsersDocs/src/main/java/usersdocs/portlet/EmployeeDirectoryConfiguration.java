@@ -1,4 +1,4 @@
-package UsersDocs.portlet;
+package usersdocs.portlet;
 
 import com.liferay.portal.kernel.portlet.ConfigurationAction;
 import com.liferay.portal.kernel.portlet.DefaultConfigurationAction;
@@ -13,11 +13,11 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
 
 @Component(
-	    configurationPid = "UsersDocs.portlet.EmployeeDirectoryConfiguration",
+	    configurationPid = "usersdocs.portlet.EmployeeDirectoryConfiguration",
 		    configurationPolicy = ConfigurationPolicy.OPTIONAL,
 		    immediate = true,
 		    property = {
-		        "javax.portlet.name=UsersDocs_portlet_UsersDocsPortlet"
+		        "javax.portlet.name=usersdocs_portlet_UsersDocsPortlet"
 		    },
 		    service = ConfigurationAction.class
 		)

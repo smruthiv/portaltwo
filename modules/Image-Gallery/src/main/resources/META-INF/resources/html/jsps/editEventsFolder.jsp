@@ -37,11 +37,14 @@
 		width:100%;
 	}
 
-	.form{
-		    display: inline-block;
-    		padding: 1em;
-    		width:47%;
-	}
+		#createDoc .form {
+    display: inline-block;
+    padding: 1em;
+    width: 47%;
+}
+.lfr-notification-container{
+display:none;
+}
 	.iconFrame{
 	display: inline-block;
     width: 19%;

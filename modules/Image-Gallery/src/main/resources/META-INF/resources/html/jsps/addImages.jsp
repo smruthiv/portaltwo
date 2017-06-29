@@ -1,3 +1,15 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
+
+<%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %><%@
+taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %><%@
+taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
+taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
+
+<liferay-theme:defineObjects />
+
+<portlet:defineObjects />
 <%@page import="com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil"%>
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 <%@ taglib prefix="aui" uri="http://liferay.com/tld/aui" %>
@@ -7,18 +19,34 @@
 <%@page import="com.liferay.portal.kernel.theme.ThemeDisplay"%>
 <%@page import="com.liferay.document.library.kernel.model.DLFolder"%>
 <%@page import="com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
+
+
 
 <portlet:defineObjects />
+<%
+int noOfErrors = SessionErrors.size(renderRequest);
+if(noOfErrors>0){
+%>
+<script>
+	 $('#<portlet:namespace/>folderNameId').val("");
+	 $('#<portlet:namespace/>folderDescId').val("");
+</script>
+<%}%>
+<liferay-ui:error key="duplicate-folder-name" message="Create a different event name.Event name already exists."/>
 <%
 	String newFolderId = request.getParameter("newFolderId"); 
 	String newFolderName = request.getParameter("newFolderName");
 %>
 <style>
-	.form{
-		    display: inline-block;
-    		padding: 1em;
-    		width:47%;
-	}
+	#createDoc .form {
+    display: inline-block;
+    padding: 1em;
+    width: 47%;
+}
+.lfr-notification-container{
+display:none;
+}
 </style>
 
 <portlet:actionURL  var="uploadImagesURL" name = "uploadImages">
@@ -78,14 +106,14 @@ for(DLFolder folder : folderList){
 		<%}%>
 			
 		<%
-			if(newFolderId =="" || newFolderId == null){
+			if(newFolderId == null || newFolderId ==""  ){
 		%>
 		<aui:form action="<%=createDocumentURL %>" cssClass="forms">
 			<span class="heading"><b>Create a New Event Folder..</b></span>
 			<br><br>
 			<span>
-			<aui:input name="folderName" type = "text" placeholder="event name" required="true" label="Folder Name"></aui:input>
-			<aui:input name="folderDesc" type = "text" placeholder="event description" label="Event Description"></aui:input>
+			<aui:input name="folderName" id="folderNameId" type = "text" placeholder="event name" required="true" label="Folder Name"></aui:input>
+			<aui:input name="folderDesc" id="folderDescId" type = "text" placeholder="event description" label="Event Description"></aui:input>
 			<aui:button name="create" type="submit" value="Create Event Folder"></aui:button>
 			</span>
 		</aui:form>

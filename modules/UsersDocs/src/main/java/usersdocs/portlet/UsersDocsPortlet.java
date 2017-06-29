@@ -1,4 +1,4 @@
-package UsersDocs.portlet;
+package usersdocs.portlet;
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 
@@ -14,7 +14,7 @@ import org.osgi.service.component.annotations.Component;
 	property = {
 		"com.liferay.portlet.display-category=category.sample",
 		"com.liferay.portlet.instanceable=true",
-		"com.liferay.portlet.configuration-action-class=Employee.Directory.portlet.EmployeeDirectoryConfiguration",
+		"com.liferay.portlet.configuration-action-class=usersdocs.portlet.EmployeeDirectoryConfiguration",
 		"javax.portlet.display-name=UsersDocs Portlet",
 		"javax.portlet.init-param.template-path=/",
 		"javax.portlet.init-param.view-template=/view.jsp",
