@@ -62,8 +62,8 @@ import org.osgi.service.component.annotations.Component;
 )
 public class UserImporterControllerPortlet extends MVCPortlet {
 
-	private static final String empXls = "EMP.xls";
-	private static final String ssiUsers = "SSI Users";
+	private static final String EMPXLS = "EMP.xls";
+	private static final String SSIUSERS = "SSI Users";
 	private static Log logger = LogFactoryUtil.getLog(UserImporterControllerPortlet.class);
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
@@ -179,7 +179,7 @@ public class UserImporterControllerPortlet extends MVCPortlet {
     		   	}
     		   	
     		 	if(isComplete){
-    		 		uploadFileInDocumentAndLibrary(themeDisplay, new File(empXls));
+    		 		uploadFileInDocumentAndLibrary(themeDisplay, new File(EMPXLS));
     		 	}
     		 	else{
     		   		logger.info("Error while uploading document in documents and library");
@@ -258,12 +258,12 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 				}
 			}
 			try {
-				File empFile1 = new File(empXls);
+				File empFile1 = new File(EMPXLS);
 				if(empFile1!=null && empFile1.exists()) { 
 				    boolean deleted = empFile1.delete();
 				    logger.info("File Deleted :- "+deleted);
 				}
-				File empFile = new File(empXls);
+				File empFile = new File(EMPXLS);
 				FileOutputStream out = new FileOutputStream(empFile);
 				workbook.write(out);
 				logger.info("Excel written successfully.."+empFile.getAbsolutePath());
@@ -279,8 +279,8 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 	 boolean uploadFileInDocumentAndLibrary(ThemeDisplay themeDisplay,File file){
 		 long repositoryId = themeDisplay.getScopeGroupId();
 		 try {
-			DLAppLocalServiceUtil.addFileEntry(themeDisplay.getUserId(), repositoryId,  DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, ssiUsers+new Date()+".xls", "application/vnd.ms-excel",  ssiUsers+new Date(),
-					ssiUsers,  ssiUsers, file, new ServiceContext());
+			DLAppLocalServiceUtil.addFileEntry(themeDisplay.getUserId(), repositoryId,  DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, SSIUSERS+new Date()+".xls", "application/vnd.ms-excel",  SSIUSERS+new Date(),
+					SSIUSERS,  SSIUSERS, file, new ServiceContext());
 		} catch (Exception e) {
 			logger.error("Error while uploading excel file in document and library "+e);
 			return false;

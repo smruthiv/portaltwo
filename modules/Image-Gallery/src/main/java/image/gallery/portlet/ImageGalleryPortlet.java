@@ -7,7 +7,6 @@ import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -117,6 +116,7 @@ public class ImageGalleryPortlet extends MVCPortlet {
 	
 	public static void uploadImages(ActionRequest req,ActionResponse res) {
 		try{
+		logger.info(res.getNamespace());	
 		ThemeDisplay themedisplay = (ThemeDisplay) req.getAttribute(WebKeys.THEME_DISPLAY);
 		 UploadPortletRequest uploadrequest = PortalUtil.getUploadPortletRequest(req);
 		 final FileItem[] arr = uploadrequest.getMultipartParameterMap().get("upload_images");
@@ -160,7 +160,9 @@ public class ImageGalleryPortlet extends MVCPortlet {
 	}
 
 	
-	public static void uploadImagesOldFolder(ActionRequest req,ActionResponse res) throws PortalException, SystemException, IOException{
+	public static void uploadImagesOldFolder(ActionRequest req,ActionResponse res) throws  SystemException, IOException{
+		try{
+		logger.info(res.getNamespace());
 		ThemeDisplay themedisplay = (ThemeDisplay) req.getAttribute(WebKeys.THEME_DISPLAY);
 		 UploadPortletRequest uploadrequest = PortalUtil.getUploadPortletRequest(req);
 		 final FileItem[] arr = uploadrequest.getMultipartParameterMap().get("upload_images");
@@ -168,6 +170,7 @@ public class ImageGalleryPortlet extends MVCPortlet {
 	        final long folderId = ParamUtil.getLong(uploadrequest, "eventFolder");
 	        for (final FileItem file : arr) {
 	        	InputStream fis = file.getInputStream();
+	        	
 	        	FileEntry entry = DLAppServiceUtil.addFileEntry(repoId,folderId,file.getFileName(), null, file.getFileName(), null, null, fis,file.getStoreLocation().getTotalSpace(), new ServiceContext());
 	        	Role role = RoleLocalServiceUtil.getRole(entry.getCompanyId(), SITE_MEMEBER);
         		long roleId = role.getRoleId();
@@ -197,5 +200,8 @@ public class ImageGalleryPortlet extends MVCPortlet {
         		            }
 	        }
 	}
-
+	catch(Exception e){
+		logger.error("Error in uploadImagesOldFolder"+e);
+	}
+	}
 }
