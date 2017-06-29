@@ -1,4 +1,4 @@
-package SSI.Profile.portlet;
+package ssi.profile.portlet;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.io.ByteArrayFileInputStream;
