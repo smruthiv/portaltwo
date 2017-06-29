@@ -100,12 +100,10 @@ public class ImageGalleryPortlet extends MVCPortlet {
 			res.setRenderParameter("newFolderName", eventFolderName+"");
 			}
 			}
-			if(!errorWhileCreatingFolder){
+			if(errorWhileCreatingFolder){
 			res.setRenderParameter("mvcPath", "/html/jsps/addImages.jsp");
 			}
-			else{
-				res.setRenderParameter("mvcPath", "/html/jsps/addImages.jsp");
-			}
+			
 		}
 		}
 		
