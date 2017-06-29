@@ -65,12 +65,6 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 	private static final String EMPXLS = "EMP.xls";
 	private static final String SSIUSERS = "SSI Users";
 	private static Log logger = LogFactoryUtil.getLog(UserImporterControllerPortlet.class);
-	@Override
-	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
-			throws IOException, PortletException {
-		logger.info("UserImporterControllerPortlet Render method called");
-		super.render(renderRequest, renderResponse);
-	}
 	
 	public void addStack(ActionRequest arq,ActionResponse ars) throws PortalException
     {
