@@ -268,7 +268,7 @@ public class UserImporterControllerPortlet extends MVCPortlet {
 	 boolean uploadFileInDocumentAndLibrary(ThemeDisplay themeDisplay,File file){
 		 long repositoryId = themeDisplay.getScopeGroupId();
 		 try {
-			DLAppLocalServiceUtil.addFileEntry(themeDisplay.getUserId(), repositoryId,  DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, SSIUSERS+new Date()+".xls", "application/vnd.ms-excel",  SSIUSERS+new Date(),
+			DLAppLocalServiceUtil.addFileEntry(themeDisplay.getUserId(), repositoryId,  DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, SSIUSERS.concat(String.valueOf(new Date().getTime()))+".xls", "application/vnd.ms-excel",  SSIUSERS.concat(String.valueOf(new Date().getTime())),
 					SSIUSERS,  SSIUSERS, file, new ServiceContext());
 		} catch (Exception e) {
 			logger.error("Error while uploading excel file in document and library "+e);
