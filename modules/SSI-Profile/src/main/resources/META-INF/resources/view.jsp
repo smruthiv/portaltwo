@@ -1,3 +1,7 @@
+<%@page import="java.util.Calendar"%>
+<%@page import="java.text.DateFormat"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.Date"%>
 <%@page import="com.liferay.portal.kernel.service.AddressLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.model.Address"%>
 <%@page import="com.liferay.portal.kernel.service.UserLocalServiceUtil"%>
@@ -17,7 +21,25 @@ List<Country> countries = CountryServiceUtil.getCountries();
 List<UserGroup> userGroups = objUser.getUserGroups();
 boolean showMyDocs = false;
 %>
+<%User myprouser = UserLocalServiceUtil.getUser(objUser.getUserId()); 
 
+				  String srcImg = myprouser.getPortraitURL(themeDisplay);	
+		Date birthDay =	  myprouser.getBirthday();
+		System.out.println(myprouser.getBirthday());
+		
+		 final DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+         final Calendar c = Calendar.getInstance();
+        
+         try {
+             c.setTime(birthDay);
+             System.out.println("Year = " + c.get(Calendar.YEAR));
+             System.out.println("Month = " + (c.get(Calendar.MONTH)));
+             System.out.println("Day = " + c.get(Calendar.DAY_OF_MONTH));
+         } 
+         catch (Exception e) {
+             
+         }
+				%>
 <liferay-ui:error key="new-password-cant-be-same-as-old-password" message="Your new password cannot be the same as your old password. Please enter a different password."/>
 <liferay-ui:error key="password-startwith-space" message="Password should not start or end with space."/>
 <liferay-ui:error key="invalid-current-password" message="Invalid Current Password"/>
@@ -37,9 +59,7 @@ boolean showMyDocs = false;
 			<!-- left column -->
 			<div class="col-md-3">
 				<div class="text-center">
-				<%User myprouser = UserLocalServiceUtil.getUser(objUser.getUserId()); 
-				  String srcImg = myprouser.getPortraitURL(themeDisplay);	
-				%>
+				
 					<img src="<%=srcImg%>"
 						class="avatar img-circle" alt="avatar">
 						<br>
@@ -115,6 +135,24 @@ boolean showMyDocs = false;
 
 				</div>
 </aui:row>
+<aui:row>
+				<div class="form-group col-md-6">
+				<label >Date of Birth</label>
+				<aui:fieldset>
+                <aui:field-wrapper>
+                    <liferay-ui:input-date
+                      dayParam="fromDateDay"
+                      dayValue="<%= c.get(Calendar.DAY_OF_MONTH) %>"
+                      monthParam="fromDateMonth"
+                     monthValue="<%= c.get(Calendar.MONTH) %>"
+                      yearParam="fromDateYear"
+                      yearValue="<%= c.get(Calendar.YEAR) %>"
+                    
+                    />
+                </aui:field-wrapper>
+            </aui:fieldset>
+            </div>
+				</aui:row>
 				<h3 style="font-weight: bold;">Address</h3>
 				
 
@@ -255,6 +293,7 @@ boolean showMyDocs = false;
 
 				</div>
 				</aui:row>
+				
 				<aui:row>
 				<div class="form-group col-md-9">
 					 <input type="button" class="btn btn-primary" value="Save Changes" onclick="submitFm()"/>

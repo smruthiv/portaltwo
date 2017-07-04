@@ -28,6 +28,8 @@ import com.liferay.portal.kernel.util.WebKeys;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -72,8 +74,24 @@ public class SSIProfilePortlet extends MVCPortlet {
 			log.info("Last Name"+lastName);
 			String skype = ParamUtil.get(actionRequest, "skype",  "");
 			String phoneNumber = ParamUtil.get(actionRequest, "phoneNumber", "" );
+			Date birthDate = null;
+			
+			int dobDay = ParamUtil.getInteger(actionRequest, "fromDateDay");
+			int dobMonth = ParamUtil.getInteger(actionRequest, "fromDateMonth");
+			int dobYear = ParamUtil.getInteger(actionRequest, "fromDateYear");
+
+			Calendar calendar = Calendar.getInstance();
+			calendar.set(Calendar.DAY_OF_MONTH, dobDay);
+			calendar.set(Calendar.MONTH, dobMonth);
+			calendar.set(Calendar.YEAR, dobYear);
+			birthDate = calendar.getTime();
+			log.info(birthDate);
 			Contact contact = user.getContact();
 			contact.setSkypeSn(skype);
+			if (birthDate!=null) {
+				contact.setBirthday(birthDate);	
+			}
+			
 			ContactLocalServiceUtil.updateContact(contact);
 			
 			UploadPortletRequest uploadPortletRequest = PortalUtil.getUploadPortletRequest(actionRequest); 
