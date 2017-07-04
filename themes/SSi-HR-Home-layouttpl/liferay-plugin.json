@@ -1,0 +1,10 @@
+{
+  "LiferayPlugin": {
+	"appServerPath": "themes",
+    "deployPath": "dist",
+    "url": "http://localhost:8080",
+    "appServerPathPlugin": "themes",
+    "deployed": false,
+    "pluginName": "SSi-HR-Home-layouttpl"
+  }
+}
