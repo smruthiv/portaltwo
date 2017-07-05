@@ -255,41 +255,29 @@ public class SSIProfilePortlet extends MVCPortlet {
 	private boolean validateCurrentPassWord(ActionRequest actionRequest, ThemeDisplay themeDisplay, String current,
 			 String authType, String login, String password1, String password2) {
 		boolean isErrorOccured = false;
-		if(isNotNullButEmpty(current)&&isNotNullAndNotEmpty(password1)&&isNotNullAndNotEmpty(password2)){
-			SessionErrors.add(actionRequest, "name-is-required");
-			isErrorOccured = true;
-		}
-		if(!password1.equals(password2))
-		{
-			SessionErrors.add(actionRequest, "confirm-new-password");
-			isErrorOccured = true;
-		}
 		try {
-		
-		/**
-		* The method authenticateForBasic returns userId of the logged in user if all
-		* the parameters in the method are correct. Otherwise it will return 0.
-		* Notice the if condition
-		*/
+			if(isNotNullButEmpty(current)&&isNotNullAndNotEmpty(password1)&&isNotNullAndNotEmpty(password2)){
+				SessionErrors.add(actionRequest, "name-is-required");
+				isErrorOccured = true;
+			}
+			if(!password1.equals(password2))
+			{
+				SessionErrors.add(actionRequest, "confirm-new-password");
+				isErrorOccured = true;
+			}
 			if(current!=null && !current.isEmpty()){
-				long userId=UserLocalServiceUtil.authenticateForBasic(themeDisplay.getCompanyId(), authType, login, current);
-				try{
-				if(themeDisplay.getUserId()!=userId)
-				{
-					SessionErrors.add(actionRequest, "invalid-current-password");
-					isErrorOccured = true;
-					
-				}
-				}
-				 catch (Exception e) {
-					 	SessionErrors.add(actionRequest, "invalid-current-password");
+					long userId=UserLocalServiceUtil.authenticateForBasic(themeDisplay.getCompanyId(), authType, login, current);
+					if(themeDisplay.getUserId()!=userId)
+					{
+						SessionErrors.add(actionRequest, "invalid-current-password");
 						isErrorOccured = true;
-						log.error(e.getMessage(), e);
-				}
-			}	
-			
+						
+					}
+			}
 		}catch (Exception e) {
-		log.error(e.getMessage(), e);
+			log.error(e.getMessage(), e);
+			SessionErrors.add(actionRequest, "invalid-current-password");
+			isErrorOccured = true;
 		}
 		return isErrorOccured;
 	}
