@@ -245,7 +245,16 @@ public class SSIProfilePortlet extends MVCPortlet {
 			
 		}
 		else{
-			
+		isErrorOccured = validateCurrentPassWord(actionRequest, themeDisplay, current, authType, login,password1,password2);
+		}
+		return isErrorOccured;
+	}
+
+
+
+	private boolean validateCurrentPassWord(ActionRequest actionRequest, ThemeDisplay themeDisplay, String current,
+			 String authType, String login, String password1, String password2) {
+		boolean isErrorOccured = false;
 		if(isNotNullButEmpty(current)&&isNotNullAndNotEmpty(password1)&&isNotNullAndNotEmpty(password2)){
 			SessionErrors.add(actionRequest, "name-is-required");
 			isErrorOccured = true;
@@ -255,17 +264,6 @@ public class SSIProfilePortlet extends MVCPortlet {
 			SessionErrors.add(actionRequest, "confirm-new-password");
 			isErrorOccured = true;
 		}
-		
-		isErrorOccured = validateCurrentPassWord(actionRequest, themeDisplay, current, authType, login);
-		}
-		return isErrorOccured;
-	}
-
-
-
-	private boolean validateCurrentPassWord(ActionRequest actionRequest, ThemeDisplay themeDisplay, String current,
-			 String authType, String login) {
-		boolean isErrorOccured = false;
 		try {
 		
 		/**
