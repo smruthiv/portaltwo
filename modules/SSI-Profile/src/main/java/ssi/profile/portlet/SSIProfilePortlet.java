@@ -382,6 +382,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 
 	private boolean verifyAndUpdatePassWord(ActionRequest actionRequest, ThemeDisplay themeDisplay, String current,
 			String password1, String password2) {
+		
 		if(isNotNullButEmpty(current)&&isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
 			log.info("All Password is empty");
 			return true;
@@ -405,28 +406,13 @@ public class SSIProfilePortlet extends MVCPortlet {
 	private boolean updateUserPassword(ActionRequest actionRequest, ThemeDisplay themeDisplay, String current,
 			String password1, String password2) {
 		boolean isNotErrorOccured = true ;
-		String errorKey = "";
 		try {
-			String authType = themeDisplay.getCompany().getAuthType();
-			String login = getLogin(themeDisplay, authType);
-			long userId=UserLocalServiceUtil.authenticateForBasic(themeDisplay.getCompanyId(), authType, login, current);
-			if(themeDisplay.getUserId()!=userId)
-			{
-				SessionErrors.add(actionRequest, INVALID);
-				return false;
+			if(isNotNullAndNotEmpty(password1)&&isNotNullAndNotEmpty(password2)){
+				UserLocalServiceUtil.updatePassword(themeDisplay.getUserId(), password1, password2, false);
 			}
-			UserLocalServiceUtil.updatePassword(userId, password1, password2, false);
-			
 		}catch (Exception e) {
 			log.error(e.getMessage(), e);
 			isNotErrorOccured = false;
-		}
-
-		if(Validator.isNull(errorKey)){
-			SessionMessages.add(actionRequest, "password-update-success");
-		}else{
-			log.info("Password update error key"+errorKey);
-			SessionErrors.add(actionRequest, errorKey);
 		}
 		return isNotErrorOccured;
 	}
