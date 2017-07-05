@@ -63,7 +63,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 	@Override
 	public void processAction(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException {
-			byte[] data = null;
+			byte[] data;
 			boolean	updatePassword;
 			updatePassword = validatePassword(actionRequest, actionResponse);
 			if(updatePassword){
@@ -76,7 +76,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 			log.info("Last Name"+lastName);
 			String skype = ParamUtil.get(actionRequest, "skype",  "");
 			String phoneNumber = ParamUtil.get(actionRequest, "phoneNumber", "" );
-			Date birthDate = null;
+			Date birthDate;
 			
 			int dobDay = ParamUtil.getInteger(actionRequest, "fromDateDay");
 			int dobMonth = ParamUtil.getInteger(actionRequest, "fromDateMonth");
