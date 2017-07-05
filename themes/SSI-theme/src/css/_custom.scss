@@ -1291,6 +1291,10 @@ background: url(../images/icons/bullet.png) no-repeat left top;
     
 }
 
+.lfr-notification-container .lfr-notification-wrapper{
+
+display:none;/**********in few resolutions the search and user menu are masked by this in the header***************************/
+}
 
 /***********************************HR Forms Styling******************************************************/
 .ssiForms img {
