@@ -393,7 +393,14 @@ public class SSIProfilePortlet extends MVCPortlet {
 		{
 			return false;
 		}
-		
+		return updateUserPassword(actionRequest, themeDisplay, current, password1, password2);
+	}
+
+
+
+	private boolean updateUserPassword(ActionRequest actionRequest, ThemeDisplay themeDisplay, String current,
+			String password1, String password2) {
+		boolean isErrorOccured = false;
 		String errorKey = "";
 		try {
 			String authType = themeDisplay.getCompany().getAuthType();
@@ -401,13 +408,15 @@ public class SSIProfilePortlet extends MVCPortlet {
 			long userId=UserLocalServiceUtil.authenticateForBasic(themeDisplay.getCompanyId(), authType, login, current);
 			if(themeDisplay.getUserId()!=userId)
 			{
+				SessionErrors.add(actionRequest, "invalid-current-password");
+				isErrorOccured = true;
 				return false;
 			}
-			if(!validateCurrentPassWord(actionRequest, themeDisplay, current, authType, login, password1, password2)){
-				UserLocalServiceUtil.updatePassword(userId, password1, password2, false);
-			}
+			UserLocalServiceUtil.updatePassword(userId, password1, password2, false);
+			
 		}catch (Exception e) {
-		log.error(e.getMessage(), e);
+			log.error(e.getMessage(), e);
+			isErrorOccured = true;
 		}
 
 		if(Validator.isNull(errorKey)){
@@ -416,8 +425,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 			log.info("Password update error key"+errorKey);
 			SessionErrors.add(actionRequest, errorKey);
 		}
-		
-		return true;
+		return isErrorOccured;
 	}
 	
 	
