@@ -28,6 +28,8 @@ import com.liferay.portal.kernel.util.WebKeys;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -48,6 +50,7 @@ import org.osgi.service.component.annotations.Component;
 		"com.liferay.portlet.instanceable=true",
 		"javax.portlet.display-name=SSI-Profile Portlet",
 		"javax.portlet.init-param.template-path=/",
+		"com.liferay.portlet.header-portlet-css=/css/myprofile.css",
 		"javax.portlet.init-param.view-template=/view.jsp",
 		"javax.portlet.resource-bundle=content.Language",
 		"javax.portlet.security-role-ref=power-user,user"
@@ -55,6 +58,7 @@ import org.osgi.service.component.annotations.Component;
 	service = Portlet.class
 )
 public class SSIProfilePortlet extends MVCPortlet {
+
 	private Log log = LogFactoryUtil.getLog(SSIProfilePortlet.class.getName());
 	@Override
 	public void processAction(ActionRequest actionRequest, ActionResponse actionResponse)
@@ -72,26 +76,32 @@ public class SSIProfilePortlet extends MVCPortlet {
 			log.info("Last Name"+lastName);
 			String skype = ParamUtil.get(actionRequest, "skype",  "");
 			String phoneNumber = ParamUtil.get(actionRequest, "phoneNumber", "" );
+			Date birthDate = null;
+			
+			int dobDay = ParamUtil.getInteger(actionRequest, "fromDateDay");
+			int dobMonth = ParamUtil.getInteger(actionRequest, "fromDateMonth");
+			int dobYear = ParamUtil.getInteger(actionRequest, "fromDateYear");
+
+			Calendar calendar = Calendar.getInstance();
+			calendar.set(Calendar.DAY_OF_MONTH, dobDay);
+			calendar.set(Calendar.MONTH, dobMonth);
+			calendar.set(Calendar.YEAR, dobYear);
+			birthDate = calendar.getTime();
+			
+			log.info("Birthdate :-"+birthDate);
 			Contact contact = user.getContact();
 			contact.setSkypeSn(skype);
-			ContactLocalServiceUtil.updateContact(contact);
+			if (birthDate!=null) {
+				contact.setBirthday(birthDate);	
+			}
 			
+			ContactLocalServiceUtil.updateContact(contact);
 			UploadPortletRequest uploadPortletRequest = PortalUtil.getUploadPortletRequest(actionRequest); 
-		    ByteArrayFileInputStream inputStream;
+		    
 			File file = uploadPortletRequest.getFile("userPic");
-            if (!file.exists()) {
-            log.info("Empty File");
-           }
-            else {
-                 inputStream = new ByteArrayFileInputStream(file, 1024);
-                  
-                  try {
-                         data = FileUtil.getBytes(inputStream);
-                    } catch (IOException e) {
-                         log.error("Error occuer"+e);
-                     }
-                  
-          }
+			
+			data = getUserProfilePotrait(file);
+           
 		
 		if(user.getAddresses()!=null&&user.getAddresses().size()>0&&user.getAddresses().get(0)!=null){
 			log.info("Update Address");
@@ -158,6 +168,8 @@ public class SSIProfilePortlet extends MVCPortlet {
 		super.processAction(actionRequest, actionResponse);
 	}
 	
+	
+
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws IOException, PortletException {
@@ -182,7 +194,6 @@ public class SSIProfilePortlet extends MVCPortlet {
 	String street1 = ParamUtil.get(actionRequest, "street1", "");
 	String city = ParamUtil.get(actionRequest, "city", "");
 	boolean isErrorOccured=false;
-	log.info(":::::::::::::Street 1::::::::::::::::" + street1);
 	String orgPassword = null;
 	if(fname !=null && !fname.isEmpty() && fname.length()>2){
 		orgPassword = fname.substring(1);
@@ -192,6 +203,18 @@ public class SSIProfilePortlet extends MVCPortlet {
 			isErrorOccured = true;
 		}
 		log.info(":::::::::::::orgPasseord::::::::::::::::" + orgPassword);
+	}
+	int dobDay = ParamUtil.getInteger(actionRequest, "fromDateDay");
+	int dobMonth = ParamUtil.getInteger(actionRequest, "fromDateMonth");
+	int dobYear = ParamUtil.getInteger(actionRequest, "fromDateYear");
+	Calendar calendar = Calendar.getInstance();
+	calendar.set(Calendar.DAY_OF_MONTH, dobDay);
+	calendar.set(Calendar.MONTH, dobMonth);
+	calendar.set(Calendar.YEAR, dobYear);
+	
+	if(calendar.compareTo(Calendar.getInstance())>=0){
+		SessionErrors.add(actionRequest, "enter-valid-date");
+		isErrorOccured = true;
 	}
 	
 	if(street1.isEmpty()&&city.isEmpty()){
@@ -343,6 +366,24 @@ public class SSIProfilePortlet extends MVCPortlet {
 	SessionErrors.add(actionRequest, errorKey);
 	}
 	return true;
+	}
+	
+	
+	private byte[] getUserProfilePotrait(File file) {
+		ByteArrayFileInputStream inputStream;
+		byte[] data = null;
+		if (!file.exists()) {
+			log.info("Empty File");
+		} else {
+			inputStream = new ByteArrayFileInputStream(file, 1024);
+			try {
+				data = FileUtil.getBytes(inputStream);
+			} catch (IOException e) {
+				log.error("Error occuer" + e);
+			}
+
+		}
+		return data;
 	}
 	
 }
