@@ -382,10 +382,6 @@ public class SSIProfilePortlet extends MVCPortlet {
 	private boolean verifyAndUpdatePassWord(ThemeDisplay themeDisplay, String current,
 			String password1, String password2) {
 		
-		if(isNotNullButEmpty(current)&&isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
-			log.info("All Password is empty");
-			return true;
-		}
 		if(isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
 			log.info("Password 1 and 2 is empty");
 			return true;
