@@ -73,36 +73,65 @@ public class SSIProfilePortlet extends MVCPortlet {
 			User user = UserLocalServiceUtil.getUser(userId);
 			String firstName = ParamUtil.get(actionRequest, "firstName", "");
 			String lastName = ParamUtil.get(actionRequest, "lastName", "");
+			String phoneNumber = ParamUtil.get(actionRequest, "phoneNumber", "" );
 			log.info("Last Name"+lastName);
 			String skype = ParamUtil.get(actionRequest, "skype",  "");
-			String phoneNumber = ParamUtil.get(actionRequest, "phoneNumber", "" );
-			Date birthDate;
-			
-			int dobDay = ParamUtil.getInteger(actionRequest, "fromDateDay");
-			int dobMonth = ParamUtil.getInteger(actionRequest, "fromDateMonth");
-			int dobYear = ParamUtil.getInteger(actionRequest, "fromDateYear");
-
-			Calendar calendar = Calendar.getInstance();
-			calendar.set(Calendar.DAY_OF_MONTH, dobDay);
-			calendar.set(Calendar.MONTH, dobMonth);
-			calendar.set(Calendar.YEAR, dobYear);
-			birthDate = calendar.getTime();
-			
-			log.info("Birthdate :-"+birthDate);
-			Contact contact = user.getContact();
-			contact.setSkypeSn(skype);
-			if (birthDate!=null) {
-				contact.setBirthday(birthDate);	
-			}
-			
-			ContactLocalServiceUtil.updateContact(contact);
 			UploadPortletRequest uploadPortletRequest = PortalUtil.getUploadPortletRequest(actionRequest); 
-		    
 			File file = uploadPortletRequest.getFile("userPic");
-			
 			data = getUserProfilePotrait(file);
-           
+			Date birthDate  = getDate(actionRequest);
+			updateContact(user, skype, birthDate);
+			updateAddress(actionRequest, user);
+			updateUserPhone(user,phoneNumber);
+			updateUserInfo(data, userId, user, firstName, lastName);
+		} catch (PortalException e) {
+			log.error("Error while uploading profile "+e);
+		}
+		log.info("Profile saved succesfully");
+		updatePassword(actionRequest,actionResponse);
+		SessionMessages.add(actionRequest, "success");
+	}
+		super.processAction(actionRequest, actionResponse);
+	}
+
+
+
+	private void updateContact(User user, String skype, Date birthDate) throws PortalException {
+		log.info("Birthdate :-"+birthDate);
+		Contact contact = user.getContact();
+		contact.setSkypeSn(skype);
+		if (birthDate!=null) {
+			contact.setBirthday(birthDate);	
+		}
+		ContactLocalServiceUtil.updateContact(contact);
+	}
+
+
+
+	private Date getDate(ActionRequest actionRequest) {
+		Date birthDate;
+		Calendar calendar = getCalendarFromRequest(actionRequest);
+		birthDate = calendar.getTime();
+		return birthDate;
+	}
+
+
+
+	private void updateUserInfo(byte[] data, long userId, User user, String firstName, String lastName)
+			throws PortalException {
+		User userInfo = UserLocalServiceUtil.getUser(userId);
+		userInfo.setFirstName(firstName);
+		userInfo.setLastName(lastName);
+		UserLocalServiceUtil.updateUser(userInfo);
 		
+		if(data!=null){
+			UserServiceUtil.updatePortrait(user.getUserId(), data);
+		}
+	}
+
+
+
+	private void updateAddress(ActionRequest actionRequest, User user) throws PortalException {
 		if(user.getAddresses()!=null&&user.getAddresses().size()>0&&user.getAddresses().get(0)!=null){
 			log.info("Update Address");
 			String street1 = ParamUtil.get(actionRequest, STREET1, "");
@@ -136,39 +165,31 @@ public class SSIProfilePortlet extends MVCPortlet {
 					AddressLocalServiceUtil.addAddress(user.getUserId(), Contact.class.getName(), user.getContactId(), street1, street2, street3, city, zipcode, 0, countryId, 11000, false, false, new ServiceContext());
 				}
 		}
-			if(user.getPhones()!=null&&user.getPhones().size()>0&&user.getPhones().get(0)!=null){
-				Phone phone = user.getPhones().get(0);
-				phone.setNumber(phoneNumber);
-				phone.setTypeId(11011);
-				phone.setUserId(user.getUserId());
-				PhoneLocalServiceUtil.updatePhone(phone);
-			}
-			else{
-				if(phoneNumber!=null && !phoneNumber.isEmpty()){
-					PhoneLocalServiceUtil.addPhone(user.getUserId(),Contact.class.getName(),user.getContactId(),phoneNumber,"",11011,true, new ServiceContext());
-				}
-			}
-			User userInfo = UserLocalServiceUtil.getUser(userId);
-			userInfo.setFirstName(firstName);
-			userInfo.setLastName(lastName);
-			UserLocalServiceUtil.updateUser(userInfo);
-			
-			if(data!=null){
-				UserServiceUtil.updatePortrait(user.getUserId(), data);
-			}
-		} catch (PortalException e) {
-			log.error("Error while uploading profile "+e);
+	}
+	
+	
+
+	private void updateUserPhone(User user, String phoneNumber) {
+		try{
+		if(user.getPhones()!=null&&user.getPhones().size()>0&&user.getPhones().get(0)!=null){
+			Phone phone = user.getPhones().get(0);
+			phone.setNumber(phoneNumber);
+			phone.setTypeId(11011);
+			phone.setUserId(user.getUserId());
+			PhoneLocalServiceUtil.updatePhone(phone);
+			log.info("Phone Number Added Succesfully");
 		}
-		log.info("Profile saved succesfully");
-		updatePassword(actionRequest,actionResponse);
-		SessionMessages.add(actionRequest, "success");
+		else if(phoneNumber!=null && !phoneNumber.isEmpty()){
+				PhoneLocalServiceUtil.addPhone(user.getUserId(),Contact.class.getName(),user.getContactId(),phoneNumber,"",11011,true, new ServiceContext());
+				log.info("Phone Number updated Succesfully");
+		}
+		}
+		catch(Exception e){
+			log.error("Error in updateUserPhone"+e);
+		}
 	}
-			
-			
-		super.processAction(actionRequest, actionResponse);
-	}
-	
-	
+
+
 
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
@@ -179,127 +200,155 @@ public class SSIProfilePortlet extends MVCPortlet {
 	
 	
 	public boolean validatePassword(ActionRequest actionRequest, ActionResponse actionResponse){
+	
 	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 	log.info(":::::::::::::calling validate Password::::::::::::::::");
 	String current = ParamUtil.getString(actionRequest, "current","");
 	String password1 = ParamUtil.getString(actionRequest, "password1","");
 	String password2 = ParamUtil.getString(actionRequest, "password2","");
 	String fname = ParamUtil.getString(actionRequest, "fname","");
+	String street1 = ParamUtil.get(actionRequest, STREET1, "");
+	String city = ParamUtil.get(actionRequest, "city", "");
+	
 	log.info(":::::::::::::Current Password::::::::::::::::" + current);
 	log.info(":::::::::::::Password 1::::::::::::::::" + password1);
 	log.info(":::::::::::::Password 2::::::::::::::::" + password2);
 	log.info(":::::::::::::fname::::::::::::::::" + fname);
-
-
-	String street1 = ParamUtil.get(actionRequest, STREET1, "");
-	String city = ParamUtil.get(actionRequest, "city", "");
-	boolean isErrorOccured=false;
-	String orgPassword = null;
-	if(fname !=null && !fname.isEmpty() && fname.length()>2){
-		orgPassword = fname.substring(1);
-		orgPassword = orgPassword.substring(0,orgPassword.length()-1);
-		if(orgPassword.startsWith(" ")||orgPassword.endsWith(" ")){
-			SessionErrors.add(actionRequest, "password-startwith-space");
-			isErrorOccured = true;
-		}
-		log.info(":::::::::::::orgPasseord::::::::::::::::" + orgPassword);
-	}
-	int dobDay = ParamUtil.getInteger(actionRequest, "fromDateDay");
-	int dobMonth = ParamUtil.getInteger(actionRequest, "fromDateMonth");
-	int dobYear = ParamUtil.getInteger(actionRequest, "fromDateYear");
-	Calendar calendar = Calendar.getInstance();
-	calendar.set(Calendar.DAY_OF_MONTH, dobDay);
-	calendar.set(Calendar.MONTH, dobMonth);
-	calendar.set(Calendar.YEAR, dobYear);
 	
-	if(calendar.compareTo(Calendar.getInstance())>=0){
-		SessionErrors.add(actionRequest, "enter-valid-date");
-		isErrorOccured = true;
-	}
+	boolean isErrorOccured =false;
+	boolean isErrorInPassword=false;
+			
+	isErrorOccured = validateUserInfo(actionRequest, street1, city, isErrorOccured);            
+	isErrorInPassword = validatePassword(actionRequest, themeDisplay, current, password1, password2, fname,isErrorInPassword);
 	
-	if(street1.isEmpty()&&city.isEmpty()){
-		log.info("city empty");
-	}
-	else if(street1.isEmpty()&&!city.isEmpty()){
-		SessionErrors.add(actionRequest, "street1-required");
-		isErrorOccured = true;
-	}
-	else if(!street1.isEmpty()&&city.isEmpty()){
-		SessionErrors.add(actionRequest, "city-required");
-		isErrorOccured = true;
-	}
-	if(isNotNullButEmpty(current)&&isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
-		log.info("All Password is empty");
-	}
-	else if(isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
-		log.info("Password 1 and 2 is empty");
-		
-	}
-	else{
-	if(isNotNullButEmpty(current)&&isNotNullAndNotEmpty(password1)&&isNotNullAndNotEmpty(password2)){
-		SessionErrors.add(actionRequest, "name-is-required");
-		isErrorOccured = true;
-	}
-	if(!password1.equals(password2))
-	{
-		SessionErrors.add(actionRequest, "confirm-new-password");
-		isErrorOccured = true;
-	}
-	
-	try {
-	String authType = themeDisplay.getCompany().getAuthType();
-	String login = "";
-	/**
-	* authType can be of three types.
-	* Therefore based on authType login can email address or
-	* screen name or user id of the logged in user
-	*/
-	if(authType.equals(CompanyConstants.AUTH_TYPE_EA)){
-	login = themeDisplay.getUser().getEmailAddress();
-	}else if(authType.equals(CompanyConstants.AUTH_TYPE_SN)){
-	login = themeDisplay.getUser().getScreenName();
-	}else if(authType.equals(CompanyConstants.AUTH_TYPE_ID)){
-	login = String.valueOf(themeDisplay.getUser().getUserId());
-	}
-
-	/**
-	* The method authenticateForBasic returns userId of the logged in user if all
-	* the parameters in the method are correct. Otherwise it will return 0.
-	* Notice the if condition
-	*/
-		if(current!=null && !current.isEmpty()){
-			long userId=UserLocalServiceUtil.authenticateForBasic(themeDisplay.getCompanyId(), authType, login, current);
-			try{
-			if(themeDisplay.getUserId()!=userId)
-			{
-				SessionErrors.add(actionRequest, "invalid-current-password");
-				isErrorOccured = true;
-				
-			}
-			}
-			 catch (Exception e) {
-				 	SessionErrors.add(actionRequest, "invalid-current-password");
-					isErrorOccured = true;
-					log.error(e.getMessage(), e);
-			}
-		}	
-		if(orgPassword!=null && !orgPassword.isEmpty()){
-			long userId	= UserLocalServiceUtil.authenticateForBasic(themeDisplay.getCompanyId(), authType, login, orgPassword);
-			if(userId!=0)
-			{
-				SessionErrors.add(actionRequest, "new-password-cant-be-same-as-old-password");
-				isErrorOccured = true;
-			}
-		}	
-	}catch (Exception e) {
-	log.error(e.getMessage(), e);
-	}
-	}
-	if(isErrorOccured){
+	if(isErrorOccured||isErrorInPassword){
 		return false;
 	}
 	return true;
 }
+
+
+
+	private boolean validatePassword(ActionRequest actionRequest, ThemeDisplay themeDisplay, String current,
+			String password1, String password2, String fname, boolean isErrorOccured) {
+		String orgPassword = null;
+		if(fname !=null && !fname.isEmpty() && fname.length()>2){
+			orgPassword = fname.substring(1);
+			orgPassword = orgPassword.substring(0,orgPassword.length()-1);
+			if(orgPassword.startsWith(" ")||orgPassword.endsWith(" ")){
+				SessionErrors.add(actionRequest, "password-startwith-space");
+				isErrorOccured = true;
+			}
+			log.info(":::::::::::::orgPasseord::::::::::::::::" + orgPassword);
+		}
+		
+		
+		
+		if(isNotNullButEmpty(current)&&isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
+			log.info("All Password is empty");
+		}
+		else if(isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
+			log.info("Password 1 and 2 is empty");
+			
+		}
+		else{
+		if(isNotNullButEmpty(current)&&isNotNullAndNotEmpty(password1)&&isNotNullAndNotEmpty(password2)){
+			SessionErrors.add(actionRequest, "name-is-required");
+			isErrorOccured = true;
+		}
+		if(!password1.equals(password2))
+		{
+			SessionErrors.add(actionRequest, "confirm-new-password");
+			isErrorOccured = true;
+		}
+		
+		try {
+		String authType = themeDisplay.getCompany().getAuthType();
+		String login = "";
+		/**
+		* authType can be of three types.
+		* Therefore based on authType login can email address or
+		* screen name or user id of the logged in user
+		*/
+		if(authType.equals(CompanyConstants.AUTH_TYPE_EA)){
+		login = themeDisplay.getUser().getEmailAddress();
+		}else if(authType.equals(CompanyConstants.AUTH_TYPE_SN)){
+		login = themeDisplay.getUser().getScreenName();
+		}else if(authType.equals(CompanyConstants.AUTH_TYPE_ID)){
+		login = String.valueOf(themeDisplay.getUser().getUserId());
+		}
+
+		/**
+		* The method authenticateForBasic returns userId of the logged in user if all
+		* the parameters in the method are correct. Otherwise it will return 0.
+		* Notice the if condition
+		*/
+			if(current!=null && !current.isEmpty()){
+				long userId=UserLocalServiceUtil.authenticateForBasic(themeDisplay.getCompanyId(), authType, login, current);
+				try{
+				if(themeDisplay.getUserId()!=userId)
+				{
+					SessionErrors.add(actionRequest, "invalid-current-password");
+					isErrorOccured = true;
+					
+				}
+				}
+				 catch (Exception e) {
+					 	SessionErrors.add(actionRequest, "invalid-current-password");
+						isErrorOccured = true;
+						log.error(e.getMessage(), e);
+				}
+			}	
+			if(orgPassword!=null && !orgPassword.isEmpty()){
+				long userId	= UserLocalServiceUtil.authenticateForBasic(themeDisplay.getCompanyId(), authType, login, orgPassword);
+				if(userId!=0)
+				{
+					SessionErrors.add(actionRequest, "new-password-cant-be-same-as-old-password");
+					isErrorOccured = true;
+				}
+			}	
+		}catch (Exception e) {
+		log.error(e.getMessage(), e);
+		}
+		}
+		return isErrorOccured;
+	}
+
+
+
+	private boolean validateUserInfo(ActionRequest actionRequest, String street1, String city, boolean isErrorOccured) {
+		Calendar calendar = getCalendarFromRequest(actionRequest);
+		
+		if(calendar.compareTo(Calendar.getInstance())>=0){
+			SessionErrors.add(actionRequest, "enter-valid-date");
+			isErrorOccured = true;
+		}
+		if(street1.isEmpty()&&city.isEmpty()){
+			log.info("city empty");
+		}
+		else if(street1.isEmpty()&&!city.isEmpty()){
+			SessionErrors.add(actionRequest, "street1-required");
+			isErrorOccured = true;
+		}
+		else if(!street1.isEmpty()&&city.isEmpty()){
+			SessionErrors.add(actionRequest, "city-required");
+			isErrorOccured = true;
+		}
+		return isErrorOccured;
+	}
+
+
+
+	private Calendar getCalendarFromRequest(ActionRequest actionRequest) {
+		int dobDay = ParamUtil.getInteger(actionRequest, "fromDateDay");
+		int dobMonth = ParamUtil.getInteger(actionRequest, "fromDateMonth");
+		int dobYear = ParamUtil.getInteger(actionRequest, "fromDateYear");
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.DAY_OF_MONTH, dobDay);
+		calendar.set(Calendar.MONTH, dobMonth);
+		calendar.set(Calendar.YEAR, dobYear);
+		return calendar;
+	}
 	
 	public boolean updatePassword(ActionRequest actionRequest, ActionResponse actionResponse){
 	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);

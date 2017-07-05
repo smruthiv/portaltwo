@@ -23,10 +23,8 @@ boolean showMyDocs = false;
 %>
 <%User myprouser = UserLocalServiceUtil.getUser(objUser.getUserId()); 
 
-				  String srcImg = myprouser.getPortraitURL(themeDisplay);	
-		Date birthDay =	  myprouser.getBirthday();
-		System.out.println(myprouser.getBirthday());
-		
+		 String srcImg = myprouser.getPortraitURL(themeDisplay);	
+	     Date birthDay =	  myprouser.getBirthday();
 		 final DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
          final Calendar c = Calendar.getInstance();
         
