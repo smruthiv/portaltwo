@@ -1,6 +1,7 @@
 package ssi.profile.portlet;
 
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.UserPasswordException.MustNotBeRecentlyUsed;
 import com.liferay.portal.kernel.io.ByteArrayFileInputStream;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -197,7 +198,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws IOException, PortletException {
-		log.info("Render Method called");
+		log.info("Render	 Method calleds");
 		super.render(renderRequest, renderResponse);
 	}
 	
@@ -374,12 +375,12 @@ public class SSIProfilePortlet extends MVCPortlet {
 	String current = ParamUtil.getString(actionRequest, "current","");
 	String password1 = ParamUtil.getString(actionRequest, "password1","");
 	String password2 = ParamUtil.getString(actionRequest, "password2","");
-	return verifyAndUpdatePassWord( themeDisplay, current, password1, password2);
+	return verifyAndUpdatePassWord(actionRequest, themeDisplay, current, password1, password2);
 	}
 
 
 
-	private boolean verifyAndUpdatePassWord(ThemeDisplay themeDisplay, String current,
+	private boolean verifyAndUpdatePassWord(ActionRequest actionRequest, ThemeDisplay themeDisplay, String current,
 			String password1, String password2) {
 		
 		if(isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
@@ -393,18 +394,23 @@ public class SSIProfilePortlet extends MVCPortlet {
 		{
 			return false;
 		}
-		return updateUserPassword(themeDisplay,password1, password2);
+		return updateUserPassword(actionRequest,themeDisplay,password1, password2);
 	}
 
 
 
-	private boolean updateUserPassword(ThemeDisplay themeDisplay,String password1, String password2) {
+	private boolean updateUserPassword(ActionRequest actionRequest, ThemeDisplay themeDisplay,String password1, String password2) {
 		boolean isNotErrorOccured = true ;
 		try {
 			if(isNotNullAndNotEmpty(password1)&&isNotNullAndNotEmpty(password2)){
 				UserLocalServiceUtil.updatePassword(themeDisplay.getUserId(), password1, password2, false);
 			}
-		}catch (Exception e) {
+		}catch (MustNotBeRecentlyUsed e) {
+			log.error(e.getMessage(), e);
+			isNotErrorOccured = false;
+			SessionErrors.add(actionRequest, "recently-used-password");
+		}
+		catch (Exception e) {
 			log.error(e.getMessage(), e);
 			isNotErrorOccured = false;
 		}
