@@ -167,7 +167,7 @@
         
         <div data-u="slides" style="cursor: default; position: relative; top: 0px; left: 240px; width: 720px; height: 480px; overflow: hidden;">
 		    <%
-			for(DLFileEntry file : fileEntries){
+			for(DLFileEntry file : fileEntries){if(file!=null&&!file.isInTrash()){
 				
 				url = themedisplay.getPortalURL() + themedisplay.getPathContext() + "/documents/" + themedisplay.getScopeGroupId() + "/" + 
 						file.getFolderId() +  "/" +file.getTitle() ;
@@ -177,7 +177,7 @@
 	                <img data-u="thumb" id="<%=file.getFolderId()%>" src="<%=url%>" alt= "<%=file.getName()%>" />
             	 </div> 
 		    <%
-			}
+			}}
 		    %>
 		</div>
 
