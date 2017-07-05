@@ -232,7 +232,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 
 	private boolean validatePassword(ActionRequest actionRequest, ThemeDisplay themeDisplay, String current,
 			String password1, String password2, String fname) {
-		 boolean isErrorOccured = false;
+		 boolean isErrorOccured;
 		 String authType = themeDisplay.getCompany().getAuthType();
 		 String login = getLogin(themeDisplay, authType);
 		 isErrorOccured = isPasswordStartOrEndWithSpace(actionRequest, fname,authType,themeDisplay,login);
@@ -256,6 +256,16 @@ public class SSIProfilePortlet extends MVCPortlet {
 			isErrorOccured = true;
 		}
 		
+		isErrorOccured = validateCurrentPassWord(actionRequest, themeDisplay, current, authType, login);
+		}
+		return isErrorOccured;
+	}
+
+
+
+	private boolean validateCurrentPassWord(ActionRequest actionRequest, ThemeDisplay themeDisplay, String current,
+			 String authType, String login) {
+		boolean isErrorOccured = false;
 		try {
 		
 		/**
@@ -282,7 +292,6 @@ public class SSIProfilePortlet extends MVCPortlet {
 			
 		}catch (Exception e) {
 		log.error(e.getMessage(), e);
-		}
 		}
 		return isErrorOccured;
 	}
