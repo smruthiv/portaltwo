@@ -1,0 +1,68 @@
+@CHARSET "ISO-8859-1";
+.row  .modal-dialog {
+    position: relative;
+    margin: 0 auto;
+    top: 35%;
+}
+.row .modal-header {
+    background-color: #f5984c;
+    padding: 5px;
+}
+
+.row .modal-header .lexicon-icon-times {
+    color: #983720;
+}
+#myProfile .col-md-3 button {
+    margin-top: 1em;
+}
+#myProfile .col-md-3 .control-label {
+    display: none;
+}
+
+#myProfile .personal-info input.form-control {
+    padding: 8px;
+    background: #fff;
+    height: 2.5em;
+    border: 1px solid #999;
+    border-radius: 3px;
+}
+#myProfile .personal-info select.form-control{
+background-color:#fff;
+ border: 1px solid #999;
+}
+
+#myProfile .personal-info h1, h2, h3, h4 {
+    color: #983720;
+    margin: 0em 0em 1em 0em;
+}
+
+#myProfile .personal-info .form-control[readonly]{
+
+background: #f5f5f5 !important;
+color:#494e50 !important;
+}
+
+#myProfile .container .img-circle {
+    border-radius: 50%;
+    border: 4px solid #f5984c;
+    width: 12em;
+    height: 12em;
+}
+#myProfile .col-md-3 .card, .col-md-3 .card-horizontal {
+    background-color: #6d2616;
+    border-radius: 0em 1em 0em 0em;
+}
+#myProfile .col-md-3 .card-row-padded{
+padding:0 !important;}
+
+#myProfile .col-md-3  .sticker-default {
+    background-color: #f5984c;
+    color: #869cad;
+}
+
+#myProfile .col-md-3  .sticker-lg .lexicon-icon{
+color:#fff;
+}
+#myProfile .col-md-3 .lfr-card-title-text a {
+    color: #fff;
+}
