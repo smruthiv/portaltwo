@@ -23,7 +23,6 @@ import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.io.File;
@@ -398,12 +397,12 @@ public class SSIProfilePortlet extends MVCPortlet {
 		{
 			return false;
 		}
-		return updateUserPassword(actionRequest, themeDisplay, current, password1, password2);
+		return updateUserPassword(themeDisplay, current, password1, password2);
 	}
 
 
 
-	private boolean updateUserPassword(ActionRequest actionRequest, ThemeDisplay themeDisplay, String current,
+	private boolean updateUserPassword(ThemeDisplay themeDisplay, String current,
 			String password1, String password2) {
 		boolean isNotErrorOccured = true ;
 		try {
