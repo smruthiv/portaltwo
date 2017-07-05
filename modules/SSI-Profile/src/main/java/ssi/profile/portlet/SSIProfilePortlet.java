@@ -374,12 +374,12 @@ public class SSIProfilePortlet extends MVCPortlet {
 	String current = ParamUtil.getString(actionRequest, "current","");
 	String password1 = ParamUtil.getString(actionRequest, "password1","");
 	String password2 = ParamUtil.getString(actionRequest, "password2","");
-	return verifyAndUpdatePassWord(actionRequest, themeDisplay, current, password1, password2);
+	return verifyAndUpdatePassWord( themeDisplay, current, password1, password2);
 	}
 
 
 
-	private boolean verifyAndUpdatePassWord(ActionRequest actionRequest, ThemeDisplay themeDisplay, String current,
+	private boolean verifyAndUpdatePassWord(ThemeDisplay themeDisplay, String current,
 			String password1, String password2) {
 		
 		if(isNotNullButEmpty(current)&&isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
@@ -397,13 +397,12 @@ public class SSIProfilePortlet extends MVCPortlet {
 		{
 			return false;
 		}
-		return updateUserPassword(themeDisplay, current, password1, password2);
+		return updateUserPassword(themeDisplay,password1, password2);
 	}
 
 
 
-	private boolean updateUserPassword(ThemeDisplay themeDisplay, String current,
-			String password1, String password2) {
+	private boolean updateUserPassword(ThemeDisplay themeDisplay,String password1, String password2) {
 		boolean isNotErrorOccured = true ;
 		try {
 			if(isNotNullAndNotEmpty(password1)&&isNotNullAndNotEmpty(password2)){
