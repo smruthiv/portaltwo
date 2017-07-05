@@ -17,6 +17,8 @@ import org.osgi.service.component.annotations.Component;
 		"com.liferay.portlet.configuration-action-class=employee.directory.portlet.EmployeeDirectoryConfiguration",
 		"javax.portlet.display-name=Employee-Directory Portlet",
 		"javax.portlet.init-param.template-path=/",
+		"com.liferay.portlet.header-portlet-javascript=/js/jquery.dataTables.min.js",
+		"com.liferay.portlet.header-portlet-css=/css/employeedirectory.css",
 		"javax.portlet.init-param.view-template=/view.jsp",
 		"javax.portlet.init-param.config-template=/config.jsp",
 		"javax.portlet.resource-bundle=content.Language",

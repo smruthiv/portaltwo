@@ -9,7 +9,6 @@
 <%@page import="com.liferay.portal.kernel.service.UserLocalServiceUtil"%>
 <%@ include file="/init.jsp" %>
 
-<script type="text/javascript" src="/documents/20147/40002/jquery.dataTables.min.js/3097edbb-f7e2-58c7-939f-e6f07a214d11"></script>
 <link href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" rel="stylesheet" />
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 <%@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>

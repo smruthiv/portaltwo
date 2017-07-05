@@ -3,9 +3,9 @@
 
 <layout-templates>
 	<custom>
-		<layout-template id="test" name="test">
-			<template-path>/test.tpl</template-path>
-			<thumbnail-path>/test.png</thumbnail-path>
+		<layout-template id="SSi-HR-Home" name="SSi-HR-Home">
+			<template-path>/s_si_hr_home.tpl</template-path>
+			<thumbnail-path>/s_si_hr_home.png</thumbnail-path>
 		</layout-template>
 	</custom>
 </layout-templates>
