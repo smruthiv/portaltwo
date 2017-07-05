@@ -59,6 +59,7 @@ import org.osgi.service.component.annotations.Component;
 )
 public class SSIProfilePortlet extends MVCPortlet {
 	private static final String STREET1 = "street1";
+	private static final String INVALID="invalid-current-password";
 	private Log log = LogFactoryUtil.getLog(SSIProfilePortlet.class.getName());
 	@Override
 	public void processAction(ActionRequest actionRequest, ActionResponse actionResponse)
@@ -272,14 +273,14 @@ public class SSIProfilePortlet extends MVCPortlet {
 					long userId=UserLocalServiceUtil.authenticateForBasic(themeDisplay.getCompanyId(), authType, login, current);
 					if(themeDisplay.getUserId()!=userId)
 					{
-						SessionErrors.add(actionRequest, "invalid-current-password");
+						SessionErrors.add(actionRequest, INVALID);
 						isErrorOccured = true;
 						
 					}
 			}
 		}catch (Exception e) {
 			log.error(e.getMessage(), e);
-			SessionErrors.add(actionRequest, "invalid-current-password");
+			SessionErrors.add(actionRequest, INVALID);
 			isErrorOccured = true;
 		}
 		return isErrorOccured;
@@ -411,7 +412,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 			long userId=UserLocalServiceUtil.authenticateForBasic(themeDisplay.getCompanyId(), authType, login, current);
 			if(themeDisplay.getUserId()!=userId)
 			{
-				SessionErrors.add(actionRequest, "invalid-current-password");
+				SessionErrors.add(actionRequest, INVALID);
 				return false;
 			}
 			UserLocalServiceUtil.updatePassword(userId, password1, password2, false);
