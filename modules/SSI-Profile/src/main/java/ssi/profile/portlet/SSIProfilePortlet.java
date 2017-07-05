@@ -371,52 +371,53 @@ public class SSIProfilePortlet extends MVCPortlet {
 	String current = ParamUtil.getString(actionRequest, "current","");
 	String password1 = ParamUtil.getString(actionRequest, "password1","");
 	String password2 = ParamUtil.getString(actionRequest, "password2","");
-	if(isNotNullButEmpty(current)&&isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
-		log.info("All Password is empty");
+	return verifyAndUpdatePassWord(actionRequest, themeDisplay, current, password1, password2);
+	}
+
+
+
+	private boolean verifyAndUpdatePassWord(ActionRequest actionRequest, ThemeDisplay themeDisplay, String current,
+			String password1, String password2) {
+		if(isNotNullButEmpty(current)&&isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
+			log.info("All Password is empty");
+			return true;
+		}
+		if(isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
+			log.info("Password 1 and 2 is empty");
+			return true;
+		}
+		if(isNotNullButEmpty(current)&&isNotNullAndNotEmpty(password1)&&isNotNullAndNotEmpty(password2)){
+			return false;
+		}
+		if(password1!=null && password2!=null && !password1.equals(password2))
+		{
+			return false;
+		}
+		
+		String errorKey = "";
+		try {
+			String authType = themeDisplay.getCompany().getAuthType();
+			String login = getLogin(themeDisplay, authType);
+			long userId=UserLocalServiceUtil.authenticateForBasic(themeDisplay.getCompanyId(), authType, login, current);
+			if(themeDisplay.getUserId()!=userId)
+			{
+				return false;
+			}
+			if(!validateCurrentPassWord(actionRequest, themeDisplay, current, authType, login, password1, password2)){
+				UserLocalServiceUtil.updatePassword(userId, password1, password2, false);
+			}
+		}catch (Exception e) {
+		log.error(e.getMessage(), e);
+		}
+
+		if(Validator.isNull(errorKey)){
+			SessionMessages.add(actionRequest, "password-update-success");
+		}else{
+			log.info("Password update error key"+errorKey);
+			SessionErrors.add(actionRequest, errorKey);
+		}
+		
 		return true;
-	}
-	if(isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
-		log.info("Password 1 and 2 is empty");
-		return true;
-	}
-	
-	if(isNotNullButEmpty(current)&&isNotNullAndNotEmpty(password1)&&isNotNullAndNotEmpty(password2)){
-		return false;
-	}
-	if(password1!=null && password2!=null && !password1.equals(password2))
-	{
-		return false;
-	}
-	
-	String errorKey = "";
-
-	try {
-	String authType = themeDisplay.getCompany().getAuthType();
-	String login = getLogin(themeDisplay, authType);
-
-	/**
-	* The method authenticateForBasic returns userId of the logged in user if all
-	* the parameters in the method are correct. Otherwise it will return 0.
-	* Notice the if condition
-	*/
-
-	long userId=UserLocalServiceUtil.authenticateForBasic(themeDisplay.getCompanyId(), authType, login, current);
-	if(themeDisplay.getUserId()!=userId)
-	{
-		return false;
-	}
-	UserLocalServiceUtil.updatePassword(userId, password1, password2, false);
-
-	}catch (Exception e) {
-	log.error(e.getMessage(), e);
-	}
-
-	if(Validator.isNull(errorKey)){
-	SessionMessages.add(actionRequest, "password-update-success");
-	}else{
-	SessionErrors.add(actionRequest, errorKey);
-	}
-	return true;
 	}
 	
 	
