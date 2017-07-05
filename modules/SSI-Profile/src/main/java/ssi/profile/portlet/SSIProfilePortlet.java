@@ -215,11 +215,11 @@ public class SSIProfilePortlet extends MVCPortlet {
 	log.info(":::::::::::::Password 2::::::::::::::::" + password2);
 	log.info(":::::::::::::fname::::::::::::::::" + fname);
 	
-	boolean isErrorOccured =false;
-	boolean isErrorInPassword=false;
+	boolean isErrorOccured;
+	boolean isErrorInPassword;
 			
-	isErrorOccured = validateUserInfo(actionRequest, street1, city, isErrorOccured);            
-	isErrorInPassword = validatePassword(actionRequest, themeDisplay, current, password1, password2, fname,isErrorInPassword);
+	isErrorOccured = validateUserInfo(actionRequest, street1, city);            
+	isErrorInPassword = validatePassword(actionRequest, themeDisplay, current, password1, password2, fname);
 	
 	if(isErrorOccured||isErrorInPassword){
 		return false;
@@ -227,24 +227,17 @@ public class SSIProfilePortlet extends MVCPortlet {
 	return true;
 }
 
+	
 
 
 	private boolean validatePassword(ActionRequest actionRequest, ThemeDisplay themeDisplay, String current,
-			String password1, String password2, String fname, boolean isErrorOccured) {
-		String orgPassword = null;
-		if(fname !=null && !fname.isEmpty() && fname.length()>2){
-			orgPassword = fname.substring(1);
-			orgPassword = orgPassword.substring(0,orgPassword.length()-1);
-			if(orgPassword.startsWith(" ")||orgPassword.endsWith(" ")){
-				SessionErrors.add(actionRequest, "password-startwith-space");
-				isErrorOccured = true;
-			}
-			log.info(":::::::::::::orgPasseord::::::::::::::::" + orgPassword);
-		}
-		
-		
-		
-		if(isNotNullButEmpty(current)&&isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
+			String password1, String password2, String fname) {
+		 boolean isErrorOccured = false;
+		 String authType = themeDisplay.getCompany().getAuthType();
+		 String login = getLogin(themeDisplay, authType);
+		 isErrorOccured = isPasswordStartOrEndWithSpace(actionRequest, fname,authType,themeDisplay,login);
+
+		 if(isNotNullButEmpty(current)&&isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
 			log.info("All Password is empty");
 		}
 		else if(isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
@@ -252,6 +245,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 			
 		}
 		else{
+			
 		if(isNotNullButEmpty(current)&&isNotNullAndNotEmpty(password1)&&isNotNullAndNotEmpty(password2)){
 			SessionErrors.add(actionRequest, "name-is-required");
 			isErrorOccured = true;
@@ -263,21 +257,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 		}
 		
 		try {
-		String authType = themeDisplay.getCompany().getAuthType();
-		String login = "";
-		/**
-		* authType can be of three types.
-		* Therefore based on authType login can email address or
-		* screen name or user id of the logged in user
-		*/
-		if(authType.equals(CompanyConstants.AUTH_TYPE_EA)){
-		login = themeDisplay.getUser().getEmailAddress();
-		}else if(authType.equals(CompanyConstants.AUTH_TYPE_SN)){
-		login = themeDisplay.getUser().getScreenName();
-		}else if(authType.equals(CompanyConstants.AUTH_TYPE_ID)){
-		login = String.valueOf(themeDisplay.getUser().getUserId());
-		}
-
+		
 		/**
 		* The method authenticateForBasic returns userId of the logged in user if all
 		* the parameters in the method are correct. Otherwise it will return 0.
@@ -299,14 +279,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 						log.error(e.getMessage(), e);
 				}
 			}	
-			if(orgPassword!=null && !orgPassword.isEmpty()){
-				long userId	= UserLocalServiceUtil.authenticateForBasic(themeDisplay.getCompanyId(), authType, login, orgPassword);
-				if(userId!=0)
-				{
-					SessionErrors.add(actionRequest, "new-password-cant-be-same-as-old-password");
-					isErrorOccured = true;
-				}
-			}	
+			
 		}catch (Exception e) {
 		log.error(e.getMessage(), e);
 		}
@@ -316,7 +289,54 @@ public class SSIProfilePortlet extends MVCPortlet {
 
 
 
-	private boolean validateUserInfo(ActionRequest actionRequest, String street1, String city, boolean isErrorOccured) {
+	private String getLogin(ThemeDisplay themeDisplay, String authType) {
+		String login = "";
+		/**
+		* authType can be of three types.
+		* Therefore based on authType login can email address or
+		* screen name or user id of the logged in user
+		*/
+		if(authType.equals(CompanyConstants.AUTH_TYPE_EA)){
+		login = themeDisplay.getUser().getEmailAddress();
+		}else if(authType.equals(CompanyConstants.AUTH_TYPE_SN)){
+		login = themeDisplay.getUser().getScreenName();
+		}else if(authType.equals(CompanyConstants.AUTH_TYPE_ID)){
+		login = String.valueOf(themeDisplay.getUser().getUserId());
+		}
+		return login;
+	}
+
+	private boolean isPasswordStartOrEndWithSpace(ActionRequest actionRequest,String fname, String authType, ThemeDisplay themeDisplay, String login){
+		 boolean isErrorOccured = false;
+		 String orgPassword = null;
+		if(fname !=null && !fname.isEmpty() && fname.length()>2){
+			orgPassword = fname.substring(1);
+			orgPassword = orgPassword.substring(0,orgPassword.length()-1);
+			if(orgPassword.startsWith(" ")||orgPassword.endsWith(" ")){
+				SessionErrors.add(actionRequest, "password-startwith-space");
+				isErrorOccured = true;
+			}
+			log.info(":::::::::::::orgPasseord::::::::::::::::" + orgPassword);
+		}
+		if(orgPassword!=null && !orgPassword.isEmpty()){
+			long userId = 0;
+			try {
+				userId = UserLocalServiceUtil.authenticateForBasic(themeDisplay.getCompanyId(), authType, login, orgPassword);
+			} catch (PortalException e) {
+				isErrorOccured = true;
+				log.error("Error while validating password "+e);
+			}
+			if(userId!=0)
+			{
+				SessionErrors.add(actionRequest, "new-password-cant-be-same-as-old-password");
+				isErrorOccured = true;
+			}
+		}	
+		return isErrorOccured;
+	}
+
+	private boolean validateUserInfo(ActionRequest actionRequest, String street1, String city ) {
+		boolean isErrorOccured = false;
 		Calendar calendar = getCalendarFromRequest(actionRequest);
 		
 		if(calendar.compareTo(Calendar.getInstance())>=0){
@@ -377,19 +397,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 
 	try {
 	String authType = themeDisplay.getCompany().getAuthType();
-	String login = "";
-	/**
-	* authType can be of three types.
-	* Therefore based on authType login can email address or
-	* screen name or user id of the logged in user
-	*/
-	if(authType.equals(CompanyConstants.AUTH_TYPE_EA)){
-	login = themeDisplay.getUser().getEmailAddress();
-	}else if(authType.equals(CompanyConstants.AUTH_TYPE_SN)){
-	login = themeDisplay.getUser().getScreenName();
-	}else if(authType.equals(CompanyConstants.AUTH_TYPE_ID)){
-	login = String.valueOf(themeDisplay.getUser().getUserId());
-	}
+	String login = getLogin(themeDisplay, authType);
 
 	/**
 	* The method authenticateForBasic returns userId of the logged in user if all
