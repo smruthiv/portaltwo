@@ -58,7 +58,7 @@ import org.osgi.service.component.annotations.Component;
 	service = Portlet.class
 )
 public class SSIProfilePortlet extends MVCPortlet {
-
+	private static final String STREET1 = "street1";
 	private Log log = LogFactoryUtil.getLog(SSIProfilePortlet.class.getName());
 	@Override
 	public void processAction(ActionRequest actionRequest, ActionResponse actionResponse)
@@ -105,7 +105,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 		
 		if(user.getAddresses()!=null&&user.getAddresses().size()>0&&user.getAddresses().get(0)!=null){
 			log.info("Update Address");
-			String street1 = ParamUtil.get(actionRequest, "street1", "");
+			String street1 = ParamUtil.get(actionRequest, STREET1, "");
 			String street2 = ParamUtil.get(actionRequest, "street2", "");
 			String street3 = ParamUtil.get(actionRequest, "street3", "");
 			String city = ParamUtil.get(actionRequest, "city", "");
@@ -124,7 +124,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 		}
 		else{
 				log.info("Add Address");
-				String street1 = ParamUtil.get(actionRequest, "street1","");
+				String street1 = ParamUtil.get(actionRequest, STREET1,"");
 				String street2 = ParamUtil.get(actionRequest, "street2", "");
 				String street3 = ParamUtil.get(actionRequest, "street3", "");
 				String city = ParamUtil.get(actionRequest, "city", "");
@@ -191,7 +191,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 	log.info(":::::::::::::fname::::::::::::::::" + fname);
 
 
-	String street1 = ParamUtil.get(actionRequest, "street1", "");
+	String street1 = ParamUtil.get(actionRequest, STREET1, "");
 	String city = ParamUtil.get(actionRequest, "city", "");
 	boolean isErrorOccured=false;
 	String orgPassword = null;
@@ -218,7 +218,7 @@ public class SSIProfilePortlet extends MVCPortlet {
 	}
 	
 	if(street1.isEmpty()&&city.isEmpty()){
-		log.info("Street 1 and city empty");
+		log.info("city empty");
 	}
 	else if(street1.isEmpty()&&!city.isEmpty()){
 		SessionErrors.add(actionRequest, "street1-required");
@@ -228,16 +228,15 @@ public class SSIProfilePortlet extends MVCPortlet {
 		SessionErrors.add(actionRequest, "city-required");
 		isErrorOccured = true;
 	}
-	if(current!=null&&current.isEmpty()&&password1!=null&&password1.isEmpty()&&password2!=null&&password2.isEmpty()){
+	if(isNotNullButEmpty(current)&&isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
 		log.info("All Password is empty");
-		
 	}
-	else if(password1!=null&&password1.isEmpty()&&password2!=null&&password2.isEmpty()){
+	else if(isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
 		log.info("Password 1 and 2 is empty");
 		
 	}
 	else{
-	if(current!=null&&current.isEmpty()&&password1!=null && password2!=null&&!password1.isEmpty()&&!password2.isEmpty()){
+	if(isNotNullButEmpty(current)&&isNotNullAndNotEmpty(password1)&&isNotNullAndNotEmpty(password2)){
 		SessionErrors.add(actionRequest, "name-is-required");
 		isErrorOccured = true;
 	}
@@ -308,16 +307,16 @@ public class SSIProfilePortlet extends MVCPortlet {
 	String current = ParamUtil.getString(actionRequest, "current","");
 	String password1 = ParamUtil.getString(actionRequest, "password1","");
 	String password2 = ParamUtil.getString(actionRequest, "password2","");
-	if(current!=null&&current.isEmpty()&&password1!=null&&password1.isEmpty()&&password2!=null&&password2.isEmpty()){
+	if(isNotNullButEmpty(current)&&isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
 		log.info("All Password is empty");
 		return true;
 	}
-	if(password1!=null&&password1.isEmpty()&&password2!=null&&password2.isEmpty()){
+	if(isNotNullButEmpty(password1)&&isNotNullButEmpty(password2)){
 		log.info("Password 1 and 2 is empty");
 		return true;
 	}
 	
-	if(current!=null&&current.isEmpty()&&password1!=null && password2!=null && !password1.isEmpty()&&!password2.isEmpty()){
+	if(isNotNullButEmpty(current)&&isNotNullAndNotEmpty(password1)&&isNotNullAndNotEmpty(password2)){
 		return false;
 	}
 	if(password1!=null && password2!=null && !password1.equals(password2))
@@ -384,6 +383,19 @@ public class SSIProfilePortlet extends MVCPortlet {
 
 		}
 		return data;
+	}
+	
+	boolean isNotNullAndNotEmpty(String parameter){
+		if(parameter!=null&&!parameter.isEmpty()){
+			return true;
+		}
+		return false;
+	}
+	boolean isNotNullButEmpty(String parameter){
+		if(parameter!=null&&parameter.isEmpty()){
+			return true;
+		}
+		return false;
 	}
 	
 }
