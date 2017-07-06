@@ -93,17 +93,16 @@ public class ImageGalleryPortlet extends MVCPortlet {
 				logger.error(e);
 				errorWhileCreatingFolder = true;
 			}
-			if(!errorWhileCreatingFolder){
+			
+			if(dlforler!=null){
 			Role role = RoleLocalServiceUtil.getRole(dlforler.getCompanyId(), SITE_MEMEBER);
         	ResourcePermissionLocalServiceUtil.setResourcePermissions(themedisplay.getCompanyId(), DLFolder.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, String.valueOf(dlforler.getFolderId()), role.getRoleId(), new String[]{"VIEW"});
 			res.setRenderParameter("newFolderId", dlforler.getFolderId()+"");
 			res.setRenderParameter("newFolderName", eventFolderName+"");
-			}
-			}
-			if(errorWhileCreatingFolder){
 			res.setRenderParameter("mvcPath", "/html/jsps/addImages.jsp");
 			}
-			
+			}
+					
 		}
 		}
 		
