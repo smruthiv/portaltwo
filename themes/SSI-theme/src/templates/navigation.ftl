@@ -6,8 +6,8 @@
 
 
 			<div class="userAccount">
-			<ul class="userMenu">
-			<li><a href="#" onclick="toggleUserMenu();return false;">
+			<div class="userMenu">
+			<a href="#" onclick="toggleUserMenu();return false;">
 			<span class="user-avatar-image">
 					
 													<img class =" aspect-ratio-bg-cover user-icon" src ="${user_avatar_url}" alt="user avatar" title="${user_name}"/>
@@ -36,8 +36,7 @@
 			</#if>	
 			
 			</ul>
-			</li>
-			</ul>
+			</div>
 							
 			</div>
 	<#if main_search_class != "no-screen">

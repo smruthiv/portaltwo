@@ -40,6 +40,7 @@ right:0;
 margin-left:auto;
 margin-right:auto;
     max-width: 1356px;
+	width:100%;
 	/*border-left: 1px solid #1e4a55!important;
     border-right: 1px solid #1e4a55!important;
     box-shadow: 0 0 8px 0 #c58779;*/
@@ -477,6 +478,32 @@ display:none;
 }
 .signed-in .policy{
 display:none;}
+@media screen and (max-width: 450px){
+.signed-out .policy{
+display:none;
+  bottom: -22em !important;
+    position: absolute;
+    text-align: justify;
+    font-size: .9em;
+    color: #d8d8d8;
+    padding: 0 1em 1em 1em;
+    background: #692312;
+
+}
+}
+@media screen and (max-height: 625px){
+.signed-out .policy{
+display:none;
+  bottom: -22em !important;
+    position: absolute;
+    text-align: justify;
+    font-size: .9em;
+    color: #d8d8d8;
+    padding: 0 1em 1em 1em;
+    background: #692312;
+
+}
+}
 
 .signed-out .policy{
 display:none;
