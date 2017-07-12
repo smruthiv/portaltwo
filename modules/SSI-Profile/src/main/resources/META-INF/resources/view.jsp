@@ -38,6 +38,7 @@ boolean showMyDocs = false;
              
          }
 				%>
+<liferay-ui:error key="recently-used-password" message="That password has already been used. Please enter a different password."/>				
 <liferay-ui:error key="new-password-cant-be-same-as-old-password" message="Your new password cannot be the same as your old password. Please enter a different password."/>
 <liferay-ui:error key="password-startwith-space" message="Password should not start or end with space."/>
 <liferay-ui:error key="invalid-current-password" message="Invalid Current Password"/>
