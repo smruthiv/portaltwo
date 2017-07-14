@@ -96,7 +96,9 @@ for(DLFolder folder : folderList){
 		%>
 		
 		<aui:form action="<%=uploadImagesURL %>"  enctype="multipart/form-data" method="post" >
-			 <aui:input name="upload_images" type = "file" required="true" multiple="<%=true %>" ></aui:input> 
+			 <aui:input name="upload_images" type = "file" required="true" multiple="<%=true %>" >
+			 <aui:validator name="acceptFiles">'jpg,png,tif,gif'</aui:validator>
+				 </aui:input> 
 			<aui:input name="newlyCreatedFolder" value="<%=newFolderId%>" type="hidden"></aui:input>
 			<p><%=newFolderName%></p>
 			<aui:button name="create" type="submit" value = "upload"></aui:button> 

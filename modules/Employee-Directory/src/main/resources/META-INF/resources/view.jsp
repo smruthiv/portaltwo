@@ -80,8 +80,8 @@ if(userGroup!=null){
 			</portlet:renderURL>
 			
 	
-	 <td><a href="<%=fullProfile.toString()%>"><%=user1.getFirstName().concat(" ").concat(user1.getLastName())%></a></td>
-	 <td><a href="mailto:<%=user1.getEmailAddress()%>"><%=user1.getEmailAddress()%></a></td>
+	 <td><a style="color: rgb(109, 38, 22);" href="<%=fullProfile.toString()%>"><%=user1.getFirstName().concat(" ").concat(user1.getLastName())%></a></td>
+	 <td><a style="color: rgb(109, 38, 22);" href="mailto:<%=user1.getEmailAddress()%>"><%=user1.getEmailAddress()%></a></td>
 	<td><%=user1.getJobTitle() %></td>
 	  
 <%if(user1.getPhones()!=null && user1.getPhones().size() > 0 && user1.getPhones().get(0) !=null){ %>
