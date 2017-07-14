@@ -124,7 +124,9 @@ for(DLFolder folder : folderList){
 				<%}%>
 				<%}%>
 			</aui:select>
-			 <aui:input name="upload_images" label="Upload Images" type = "file" required="true" multiple="<%=true%>" ></aui:input>
+			 <aui:input name="upload_images" label="Upload Images" type = "file" required="true" multiple="<%=true%>" >
+			 <aui:validator name="acceptFiles">'jpg,png,tif,gif'</aui:validator>
+			 </aui:input>
 			 <aui:button name="create" type="submit" value = "Upload Images"></aui:button> 
 			 </span> 
 		</aui:form>
