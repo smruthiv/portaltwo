@@ -26,7 +26,9 @@ font-size:14px;
 min-height:100%;
 font-family: 'Roboto Condensed', sans-serif;
 }
-
+.empty{
+display:none;
+}
 
 #wrapper {
 margin-top:0px !important;
@@ -46,7 +48,7 @@ margin-right:auto;
     box-shadow: 0 0 8px 0 #c58779;*/
 	margin:auto;
 
-	
+	word-break:break-all;
 }
 #content .portlet-layout {
 		margin-left: 0;
@@ -466,7 +468,14 @@ margin:2px 0 0 0px !important
 	font-family: 'Roboto Condensed', sans-serif;
 	padding: 0em 1em 0em 1em !important;
 }
+@media screen and (max-height: 780px){
 
+#content{
+
+min-height:86% !important;
+}
+
+}
 .signed-out #content{
 background:none;}
 .signed-out .breadcrumb{
@@ -488,7 +497,7 @@ display:none;
     color: #d8d8d8;
     padding: 0 1em 1em 1em;
     background: #692312;
-
+word-break:break-all;
 }
 }
 @media screen and (max-height: 625px){
@@ -651,6 +660,15 @@ padding:0 !important;}
     margin: 0 auto;
     width: 25em;
    
+}
+
+@media screen and (max-width: 420px){
+#portlet_com_liferay_login_web_portlet_LoginPortlet{
+width:18em !important;
+}
+#signIn_header img{
+width:18em !important;
+}
 }
 #signIn_header img {
     width: 25em;
@@ -835,11 +853,13 @@ color:#000 !important;
 /***************************Home Page Image Slider styling*************************************/
 .carousel-indicators {
     top: 20px;
+	margin:0 !important;
+	right:0 !important;
+	left:initial !important;
+	width:45% !important;
 }
 
-.carousel-indicators{
-margin-left:11%;
-}
+
 .carousel-control {
     display: none;
 }
@@ -862,15 +882,18 @@ margin-left:11%;
 
 }
 
-.carousel-inner>.item>img, .carousel-inner>.item>a>img{
+/*.carousel-inner>.item>img, .carousel-inner>.item>a>img{
 height:22em;
 object-fit:cover;
-}
+}*/
 
 #myCarousel{
-height: 24em;
+height: auto !important;
+min-height:10em;
 }
-
+.carousel-inner img{
+min-height:10em;
+}
 .carousel-caption h2{
 font-size:1.2em;
 padding:0;
@@ -900,9 +923,7 @@ padding:4em 0 0 1em!important;
 
 
 
-.carousel-indicators {
-    top: 20px;
-}
+
 }
 /***********************Web Content portlet styling*********************************/
 .portletTitle {
@@ -916,7 +937,7 @@ padding:4em 0 0 1em!important;
     border: none!important;
 }
 .portlet-title-text{
-	 background: #983720;
+	 
     width: 100%;
     color: #fff;
     font-size: 18px;
@@ -998,7 +1019,7 @@ padding:4em 0 0 1em!important;
 }
 
 #newsContainer {
-    height: 22em;
+    height: 15em;
 	
 }
 
@@ -1030,9 +1051,10 @@ padding:4em 0 0 1em!important;
 .newsEntry {
     
     width: 100%;
-    height: 5.5em;
-    margin:0.5em 0em 0em 0.5em;
+    height: 5em;
+    margin:5px;
     float: left;
+	overflow:hidden;
 }
 
 .publishDate {
@@ -1093,7 +1115,7 @@ font-weight:normal !important;
 }
 /*****************Quick Links*******************************/
 #quickLinks{
-height: 22em;
+height: 15em;
     padding:0;
 }
 
@@ -1103,9 +1125,28 @@ height: 22em;
     padding:1em 0 1em 0;
     text-align: center;
 }
+
+.linksIcon img {
+    width: 25px;
+    height: 28px;
+}
+
+@media screen and (max-width: 350px){
+
+.linksIcon {
+    display: block !important;
+    width: 39% !important;
+    min-height: 6em;
+    float: left;
+    margin: 6px !important;
+	padding:0 !important;
+}
+
+}
 .linksIcon a{
     color:#313131;
 	font-size:12px;
+	word-break:normal !important;
 }
 
 /***************************************************************HR Quick Links************************/
@@ -1150,48 +1191,7 @@ background-color:#db7a02 !important;
 }
 /*******************Hiding Dockbar by default**********************************/
 
-/*******************************Mission,Vision Section*********************************************/
-.homeTabs .container {
-    width: 100%;
-    background-image:url('http://devssiliferayelb-348731731.us-east-1.elb.amazonaws.com:8080/documents/20147/33805/missionBackground.jpg/1f38ff3b-6f4f-0d2f-ec01-97d58bf5259b?t=1492599571684');
-    height: 22em;
-    padding: 0;
-    color: #fff;
-}
-.homeTabs .tab-content {
-    padding: 1em;
-    height: 19.1em;
-    overflow-y:auto;
-    background: rgba(68,22,11,0.70);
-    text-align: justify;
-}
-.homeTabs .nav {
-    background: #983720;
-}
-.homeTabs li.active {
-    background: #983720;
-    border-bottom: 3px solid orange;
-}
-.homeTabs .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
-    background: #983720;
-    border: none;
-    padding: 10px 3px 10px 3px;
-    color: #fff;
-    text-transform:uppercase;
-	font-weight: bold;
-}
-.homeTabs .nav-tabs>li>a{
-color:#fff;
-text-transform:uppercase;
- padding: 10px 6px 10px 6px !important;
-}
 
-.homeTabs .nav-tabs {
-    border-bottom:none;
-}
-.homeTabs .tab-content {
-    padding: 1em;
-}
 
 /*************Left Side menu Panel Styling************************/
 .product-menu .sidebar .sidenav-menu {
@@ -1352,7 +1352,17 @@ display:none;/**********in few resolutions the search and user menu are masked b
 margin-top:1em;
 width:20em !important;}
 
+@media screen and (max-width: 300px){
+.ssiForms{
+width:13em !important;
+}
+}
+@media screen and (min-width 301px) and (max-width 600px){
+.ssiForms{
+width:17em !important;
+}
 
+}
 
 
 
