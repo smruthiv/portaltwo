@@ -84,5 +84,22 @@
 This is a Social Solutions International computer system. This system is provided for the processing of Social Solutions International business only. All data contained on this computer systems is owned by Social Solutions International and may be monitored, intercepted, recorded, read, copied, or captured in any manner and disclosed in any manner, by authorized personnel. THERE IS NO RIGHT OF PRIVACY IN THIS SYSTEM. System personnel may give to law enforcement officials any potential evidence of crime found on this computer systems. USE OF THIS SYSTEM BY ANY USER, AUTHORIZED OR UNAUTHORIZED, CONSTITUTES CONSENT TO THIS MONITORING, INTERCEPTION, RECORDING, READING, COPYING, OR CAPTURING and DISCLOSURE. Unauthorized access or use of this computer system may subject violators to criminal, civil, and/or administrative action.
 </div>
 
+
+<script>
+$(document).ready(function(){
+
+ $('#wrapper').css('height', $(window).height());
+	
+	 var winH = $(window).height(), 
+                                          headH = $('#banner').outerHeight(), 
+                                          footH = $('#footer').outerHeight(), 
+                                          H = winH -(headH + footH + 20); 
+                                         $('#content').css('min-height',H); 
+    
+});
+
+</script>
+
+
 	</body>
 </html>

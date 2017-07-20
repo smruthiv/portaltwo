@@ -8,9 +8,7 @@
 
 @import "portlet_decorator";
 
-html{
-height:100%;
-}
+
 
 .img-spacing {
 	margin-bottom: 15px;
@@ -23,7 +21,7 @@ height:100%;
 body {
 background:#fff;
 font-size:14px;
-min-height:100%;
+
 font-family: 'Roboto Condensed', sans-serif;
 }
 .empty{
@@ -36,7 +34,7 @@ font-family: 'Roboto Condensed', sans-serif;
 background:#f7f7f7;
 padding: 0;
 position:absolute !important;
-height:100%;
+
 left:0;
 right:0;
 margin-left:auto;
@@ -92,6 +90,12 @@ border:none !important;
 .userMenu{
 padding:0;
 margin:0;}
+
+
+.portlet-topper{
+z-index:5;
+}
+
 
 .userMenu li{
 list-style:none;}
@@ -462,20 +466,20 @@ margin:2px 0 0 0px !important
 	
 	#content {
     /*padding-top: 5.2em;*/
-	min-height:90%;
+	/*min-height:90%;*/
 	background:#f7f7f7;
 	margin-top:-1.5em !important;
 	font-family: 'Roboto Condensed', sans-serif;
-	padding: 0em 1em 0em 1em !important;
+	padding: 0 !important;
 }
-@media screen and (max-height: 780px){
+/*@media screen and (max-height: 780px){
 
 #content{
 
-min-height:86% !important;
+min-height:85.5% !important;
 }
 
-}
+}*/
 .signed-out #content{
 background:none;}
 .signed-out .breadcrumb{
@@ -622,6 +626,8 @@ text-align:center;
 }
 #footer{
 background:#983720;
+
+width:100%;
 }
 
 #footer a{
@@ -1019,7 +1025,9 @@ padding:4em 0 0 1em!important;
 }
 
 #newsContainer {
-    height: 15em;
+    height: 17em;
+	overflow:hidden;
+	
 	
 }
 
@@ -1051,7 +1059,7 @@ padding:4em 0 0 1em!important;
 .newsEntry {
     
     width: 100%;
-    height: 5em;
+    min-height: 5em;
     margin:5px;
     float: left;
 	overflow:hidden;
@@ -1122,8 +1130,9 @@ height: 15em;
 .linksIcon {
     display: inline-table;
     width: 30%;
-    padding:1em 0 1em 0;
+    padding:0.8em 0 0.8em 0;
     text-align: center;
+	word-break:normal;
 }
 
 .linksIcon img {
@@ -1298,6 +1307,7 @@ color:#6d2616;
 text-align:justify;
 	background:#fff;
 	padding:1em;
+	word-break:break-all;
 }
 #contentContainer li{
 background: url(../images/icons/bullet.svg) no-repeat left top;
@@ -1316,6 +1326,9 @@ background: url(../images/icons/bullet.png) no-repeat left top;
 .breadcrumb {
     padding: 0 10px 0px 33px;
     
+}
+.breadcrumb>li{
+text-transform:none !important;
 }
 
 .lfr-notification-container .lfr-notification-wrapper{
@@ -1357,12 +1370,13 @@ width:20em !important;}
 width:13em !important;
 }
 }
-@media screen and (min-width 301px) and (max-width 600px){
+@media screen and (min-width:301px) and (max-width:600px){
 .ssiForms{
 width:17em !important;
 }
 
 }
+
 
 
 

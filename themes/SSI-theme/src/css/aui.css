@@ -12824,7 +12824,7 @@ a.badge-default, a.badge-default:focus, a.badge-default:hover,
 .breadcrumb > li {
   font-size: 12px;
   font-weight: 500;
-  text-transform: uppercase; }
+  text-transform: none; }
   .breadcrumb > li:before {
     font-family: 'fontawesome-alloy';
     font-size: 16px;
