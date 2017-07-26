@@ -1888,7 +1888,7 @@ a.taglib-icon.btn:focus .taglib-text, a.taglib-icon.btn:hover .taglib-text {
   left: 0;
   margin: 0;
   padding: 10px 15px;
-  position: relative !important;
+  position: inherit !important;
   width: 100%; }
   @media only screen and (min-width: 768px) {
     .dialog-with-footer .button-holder.dialog-footer {
