@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portal.kernel.security.permission.PermissionThreadLocal"%>
+<%@page import="com.liferay.portal.kernel.security.permission.PermissionChecker"%>
 <%@page import="com.liferay.portal.kernel.service.ServiceContext"%>
 <%@page import="com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil"%>
 <%@page import="javax.portlet.PortletSession"%>
@@ -116,9 +118,13 @@ if(isGalleryFolderExist==false){
 		   					 <portlet:param name="jspPage" value="/html/jsps/editEventsFolder.jsp" />
 	</portlet:renderURL>
 <hr>
+<%
+PermissionChecker permissionChecker = PermissionThreadLocal.getPermissionChecker();
+if(permissionChecker.isOmniadmin()){ %>
 <div id = "createDoc">
 	<div id="actions">
 		 <aui:a href="<%= addImages %>"> <button  class = "btn btn-primary" type="button" >Create a New Event</button></aui:a>
 		 <aui:a href="<%= addImagesToOldEvents %>"><button  class = "btn btn-primary" type="button" >Upload Photos to Existing Event</button></aui:a>
 	 </div>
 </div>
+<%}%>
