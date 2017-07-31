@@ -5,8 +5,7 @@
 <html class="${root_css_class}" dir="<@liferay.language key="lang.dir" />" lang="${w3c_language_id}">
 	<head>
 		<title>${the_title} - ${company_name}</title>
-<meta http-equiv="Page-Enter" content="blendTrans(Duration=0.2)" />
-<meta http-equiv="Page-Exit" content="blendTrans(Duration=0.2)" />
+
 		<meta content="initial-scale=1.0, width=device-width" name="viewport" />
 		<@liferay.js file_name="${javascript_folder}/jquery.min.js"/> 
 		<@liferay_util["include"] page=top_head_include />
@@ -90,27 +89,38 @@ This is a Social Solutions International computer system. This system is provide
 <script>
 $(document).ready(function(){
 
- 
+  
 	
-	 var winH = $(window).height(), 
+	 var winH = $(window).height(); 
+	$('#wrapper').css('min-height',winH);
                                           headH = $('#banner').outerHeight(), 
                                           footH = $('#footer').outerHeight(), 
                                           H = winH -(headH + footH + 20); 
                                          $('#content').css('min-height',H); 
-    $('#wrapper').css('height', $(window).height());
+$(checkForPanel);
+function checkForPanel()
+{
+    if ($('#_com_liferay_product_navigation_product_menu_web_portlet_ProductMenuPortlet_sidenavSliderId').hasClass('open')){
+		
+       $('#_com_liferay_product_navigation_product_menu_web_portlet_ProductMenuPortlet_sidenavSliderId a').attr('target','_blank');}
+    
+}
+$(".product-menu-toggle").click(
+    function() {
+        console.log("opening side panel");
+
+        setTimeout(
+            function() {
+                $('#_com_liferay_product_navigation_product_menu_web_portlet_ProductMenuPortlet_sidenavSliderId a').attr('target','_blank');
+            },
+            2000);
+    });
+
 });
 
-</script>
-<script type="text/javascript">
 
-var x = document.getElementById('_com_liferay_product_navigation_product_menu_web_portlet_ProductMenuPortlet_sidenavSliderId');
-if(x){
-var y = x.getElementsByTagName('a');
-for (var i = 0; i < y.length; i++) {
-y[i].setAttribute('target', '_blank');
-   }
-   }
 </script>
+
 
 	</body>
 </html>

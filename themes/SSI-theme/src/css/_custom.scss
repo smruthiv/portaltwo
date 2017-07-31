@@ -626,7 +626,8 @@ text-align:center;
 }
 #footer{
 background:#983720;
-
+position:absolute;
+bottom:0;
 width:100%;
 }
 
@@ -1370,11 +1371,7 @@ width:20em !important;}
 width:13em !important;
 }
 }
-@media screen and (min-width:301px) and (max-width:600px){
-.ssiForms{
-width:17em !important;
-}
-}
+
 
 
 
