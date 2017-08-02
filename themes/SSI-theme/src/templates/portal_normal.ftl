@@ -88,16 +88,8 @@ This is a Social Solutions International computer system. This system is provide
 
 <script>
 $(document).ready(function(){
-
-  
-	
-	 var winH = $(window).height(); 
-	$('#wrapper').css('min-height',winH);
-                                          headH = $('#banner').outerHeight(), 
-                                          footH = $('#footer').outerHeight(), 
-                                          H = winH -(headH + footH + 20); 
-                                         $('#content').css('min-height',H); 
-$(checkForPanel);
+	 
+	$(checkForPanel);
 function checkForPanel()
 {
     if ($('#_com_liferay_product_navigation_product_menu_web_portlet_ProductMenuPortlet_sidenavSliderId').hasClass('open')){
@@ -106,16 +98,11 @@ function checkForPanel()
     
 }
 $(".product-menu-toggle").click(
-    function() {
+    function(){
         console.log("opening side panel");
-
         setTimeout(
-            function() {
-                $('#_com_liferay_product_navigation_product_menu_web_portlet_ProductMenuPortlet_sidenavSliderId a').attr('target','_blank');
-            },
-            2000);
+            function() {$('#_com_liferay_product_navigation_product_menu_web_portlet_ProductMenuPortlet_sidenavSliderId a').attr('target','_blank');},2000);
     });
-
 });
 
 
