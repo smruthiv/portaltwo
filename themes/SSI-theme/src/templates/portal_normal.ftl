@@ -12,12 +12,7 @@
 		<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700" rel="stylesheet">
 
 	</head>
-  <Script>
-    if (!$("link[href='/o/SSI-theme/css/main.css']").length)
-    $('<link href="/o/SSI-theme/css/aui.css" rel="stylesheet">').appendTo("head");
-  if (!$("link[href='/o/SSI-theme/css/main.css']").length)
-    $('<link href="/o/SSI-theme/css/main.css" rel="stylesheet">').appendTo("head");
-</Script>
+  
 	<body class="${css_class}">
 		<@liferay_ui["quick-access"] contentId="#main-content" />
 
@@ -27,7 +22,32 @@
 
 		<div id="wrapper">
 			
-			
+			<script type="text/javascript">
+//<![CDATA[
+var cp = window.location.href.indexOf("control_panel");
+if(cp < 0){
+var cssId = 'myCss';
+if (!document.getElementById(cssId))
+{
+    var head  = document.getElementsByTagName('head')[0];
+    var link  = document.createElement('link');
+    link.id   = cssId;
+    link.rel  = 'stylesheet';
+    link.type = 'text/css';
+    link.href = '/o/SSI-theme/css/aui.css';
+    link.media = 'all';
+    head.appendChild(link);
+    var headaui  = document.getElementsByTagName('head')[0];
+    var linkaui  = document.createElement('link');
+    linkaui.rel  = 'stylesheet';
+    linkaui.type = 'text/css';
+    linkaui.href = '/o/SSI-theme/css/main.css';
+    linkaui.media = 'all';
+    headaui.appendChild(linkaui);
+}
+}
+//]]>
+</script>
 			<header class="container-fluid-1280" id="banner" role="banner">
 			
 				<div class="navbar-header" id="heading">
