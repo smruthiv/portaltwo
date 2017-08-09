@@ -108,8 +108,7 @@ This is a Social Solutions International computer system. This system is provide
 
 <script>
 $(document).ready(function(){
-	 
-	$(checkForPanel);
+$(checkForPanel);
 function checkForPanel()
 {
     if ($('#_com_liferay_product_navigation_product_menu_web_portlet_ProductMenuPortlet_sidenavSliderId').hasClass('open')){
